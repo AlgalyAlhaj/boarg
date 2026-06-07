@@ -1,366 +1,464 @@
-<DOCTYPE html>
- <html lang=""en">
-   <head>
-    <meta charset=""UTF-8">
-    <title>BOARG TRADING ENTERPRISES</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ALGALY ALHAJ AHMED</title>
     <style>
-        body { 
-            font-family: 'Times New Roman', Times, serif;
-            margin: 20px; 
+        * {
+            box-sizing: border-box;
         }
-        h1 { 
-            margin-bottom: 5px; 
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 15px;
+            background: white;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .button-bar {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+            padding: 10px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .action-btn:active {
+            background-color: #e0e0e0;
+        }
+        h1 {
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+            word-break: break-word;
         }
         .licence {
-            font-weight: bold; 
-            font-size: 1.2rem; 
-             margin-top: 0; 
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 0 5px 0;
+        }
+        .contact-line {
+            margin: 4px 0;
+            word-break: break-word;
+        }
+        .email-link {
+            color: #0066cc;
+            text-decoration: underline;
+            word-break: break-all;
         }
         .dotted-line {
-            border:none;
-            border-top: 2px dotted #888; 
+            border: none;
+            border-top: 2px dotted #888;
             margin: 15px 0;
         }
-        .info-line {
-            font-weight: bold; 
-            font-size: 1.1rem; 
-            text-decoration: none; 
+        .report-line {
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: underline;
             margin: 5px 0;
+            flex-wrap: wrap;
         }
         .update-line {
-            font-size: 0.9rem; 
-            font-style: italic; 
-            text-decoration: none; 
+            font-size: 0.85rem;
+            font-style: italic;
+            text-decoration: none;
             font-weight: normal;
-            margin-left: 15px; 
+            margin-left: 10px;
+            white-space: nowrap;
         }
         .boarg-line {
             font-weight: bold;
-            margin: 5px 0; 
             font-size: 1.1rem;
+            margin: 5px 0;
         }
-
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px -5px 0 -5px;
+            padding: 0 5px;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
+            min-width: 700px;
+            font-size: 0.8rem;
         }
         th, td {
-            border: 1px solid #aaa; 
-            padding: 8px 12px;
+            border: 1px solid #aaa;
+            padding: 8px 10px;
             text-align: left;
             vertical-align: top;
-            text-decoration: none;
-            -webkit-print-color-adjust: exact;
-             print-color-adjust: exact;
         }
         th {
             font-weight: bold;
             background-color: #f2f2f2;
-            text-decoration: none;
+        }
+        /* Narrow widths for the last 3 columns (Telex, FC, IM) */
+        th:nth-child(7), td:nth-child(7),
+        th:nth-child(8), td:nth-child(8),
+        th:nth-child(9), td:nth-child(9) {
+            width: 45px;
+            max-width: 45px;
+            text-align: center;
+            padding: 8px 4px;
         }
         .cell-green {
             background-color: #90EE90;
         }
-        .CELL-RED {
+        .cell-red {
             background-color: #FFCCCC;
-        }
-        table * {
-            text-decoration: none !important;
-        }
-        .glossary {
-            margin-top: 30px;
-            border-top: 2px dotted #888;
-            padding-top: 15px; 
-        }
-        .glossary h3 {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        .glossary-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minimax(280px, 1fr));
-            gap: 8px 20px;
-        }
-        .glossray-item {
-            font-size: 0.95rem;
-        }
-        .glossary-term {
-            font-weight: bold;
         }
         .footer {
             margin-top: 30px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #333;
             border-top: 1px solid #ccc;
             padding-top: 12px;
-            font-family: 'Times New Roman', Times, serif;
         }
         .swatch {
             display: inline-block;
             width: 16px;
-            height: 16px; 
-            margin: 0 2px -2px 0; 
-            border: 1px solid #888; 
+            height: 16px;
+            margin: 0 4px -2px 0;
+            border: 1px solid #888;
         }
-.swatch-green {
-    background-color: #90EE90;
-}
-
-.swatch-red {
-    background-color: #FFCCCC;
-}
+        .swatch-green { background-color: #90EE90; }
+        .swatch-red { background-color: #FFCCCC; }
+        .glossary-text {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
         @media print {
-    .cell-green, .cell-red, .swatch-red, .swatch-green {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
             .button-bar {
-                display: none; 
+                display: none;
             }
             body {
-                margin: 0.5in; 
+                margin: 0.3in;
+                padding: 0;
+            }
+            .table-wrapper {
+                overflow-x: visible;
+                margin: 0;
+                padding: 0;
             }
             table {
-                page-break-inside: avoid; 
+                min-width: auto;
+                font-size: 0.7rem;
             }
-            tr {
-                page-break-inside: avoid;
+            th, td {
+                padding: 4px 6px;
+            }
+            .cell-green, .cell-red,
+            .swatch-green, .swatch-red,
+            th {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
         }
-        #pdfContent {
-            background: white;
-        }
-
-    </style>
-     <script stc="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-   </head>
-
-   <body> 
-
-    <div class="button-bar">
-        <button class="action-btn" id="printBtn">Print</button>
-        <button class="action-btn" id="pdfBtn">Download</button>
-    </div>
-    <h1>ALGALY ALHAJ AHMED</h1>
-    <div class="licence">Clearance Licence (2460)</div>
-    <div class="licence">Phones: 0129925333 - 0912341022</div>
-    <div class="licence">Musa building, apartment (31)</div>
-    <div class="licence">
-        <a href="mailto:algalyalhaj24@gmail.com" class="email-link">algalyalhaj24@gmail.com</a>
-    </div>  
-
-    <hr class="dotted-line"> 
-
-    <div class="info-line"><u>
-        Date: 06-Jun-2026
-    </u><span class="update-line">last update: 05:44 p.m.</span>
-    </div>
-    <div class="boarg-line"><u>BOARG TRADING ENTERPRISES</u><div>
-
-  <table>
-    <thead>
-        <tr>
-            <th>BILL</th><th>QTY</th><th>CNTR</th><th>Agent</th><th>Invice</th><th>Arrival</th><th>Telex</th><th>FC</th><th>IM</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>TAXN60039400</td>
-            <td>1580</td>
-            <td>4</td>
-            <td>PIL</td>
-            <td>3008687</td>
-            <td>18-May</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>TAXW60057400</td>
-            <td>944</td>
-            <td>2</td>
-            <td>PIL</td>
-            <td>3008764</td>
-            <td>04-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>TAXW60058500</td>
-            <td>1185</td>
-            <td>3</td>
-            <td>PIL</td>
-            <td>3008792</td>
-            <td>04-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2800807</td>
-            <td>954</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008783</td>
-            <td>*12-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-green"></td>
-        </tr>
-        <tr>
-            <td>QGD2800750</td>
-            <td>472</td>
-            <td>1</td>
-            <td>CMA</td>
-            <td>3008784</td>
-            <td>*12-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2800842</td>
-            <td>800</td>
-            <td>1</td>
-            <td>CMA</td>
-            <td>3008789</td>
-            <td>*12-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2800822</td>
-            <td>2932</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008787</td>
-            <td>*12-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2800838</td>
-            <td>2355</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008788</td>
-            <td>*12-Jun</td>
-            <td class="cell-green"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2853479</td>
-            <td>3096</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008842</td>
-            <td>*22-Jun</td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2800861</td>
-            <td>520</td>
-            <td>1</td>
-            <td>CMA</td>
-            <td>3008834</td>
-            <td>*22-Jun</td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2866067E</td>
-            <td>790</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008877</td>
-            <td>*22-Jun</td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
-        <tr>
-            <td>QGD2897428</td>
-            <td>790</td>
-            <td>2</td>
-            <td>CMA</td>
-            <td>3008878</td>
-            <td>*22-Jun</td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-            <td class="cell-red"></td>
-        </tr>
         
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .licence, .report-line, .boarg-line {
+                font-size: 1rem;
+            }
+            .update-line {
+                white-space: normal;
+                display: inline-block;
+                margin-left: 0;
+            }
+            .button-bar {
+                justify-content: center;
+            }
+            .action-btn {
+                font-size: 0.9rem;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="button-bar">
+        <button class="action-btn" id="printBtn">🖨️ Print</button>
+        <button class="action-btn" id="pdfBtn">📄 Save PDF</button>
+    </div>
 
-    </tbody>
-  </table>
+    <div id="pdfContent">
+        <h1>ALGALY ALHAJ AHMED</h1>
+        <div class="licence">Clearance Licence (2460)</div>
+        <div class="contact-line">Phones: 0129925333 - 0912341022</div>
+        <div class="contact-line">Musa building, apartment (31)</div>
+        <div class="contact-line"><a href="mailto:algalyalhaj24@gmail.com" class="email-link">algalyalhaj24@gmail.com</a></div>
+        <hr class="dotted-line">
+        <div class="report-line">
+            Report Date: 06-Jun-2026
+            <span class="update-line">last update: 05:44 pm</span>
+        </div>
+        <div class="boarg-line"><u>BOARG TRADING ENTERPRISES</u></div>
 
-  <div style="margin-top: 20px; font-size: 0.9rem;">
-    <strong>BILL: </strong> Bill of Lading. &nbsp;&nbsp; 
-    <strong>QTY: </strong> Quantity. &nbsp;&nbsp;
-    <strong>CNTR: </strong> Number of containers. &nbsp;&nbsp;
-    <strong>Invoice: </strong> Invoice REF. &nbsp;&nbsp;
-    <strong>Telex: </strong> Telex release. &nbsp;&nbsp;
-    <strong>FC: </strong> Final Conformity. &nbsp;&nbsp;
-    <strong>IM: </strong> Import Form. &nbsp;&nbsp;
-    <span class="swatch swatch-green"></span>  received. &nbsp;&nbsp; &nbsp;
-    <span class="swatch swatch-red"></span>  NOT received. 
-    <br>
-    <strong>* </strong> Estimated arrival, suspect to changes.
-    
-  </div>
-  <div class="footer">
-    Powered by Algaly Alhaj for Digital Solutions
-  </div>
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>BILL</th><th>QTY</th><th>Number of containers</th><th>Agent</th><th>Invoice REF</th><th>Arrival</th><th>Telex</th><th>FC</th><th>IM</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- YOUR 18 ROWS GO HERE -->
+                    <!-- Example row shown — replace with your actual data -->
+                    <tr>
+                        <td>TAXN60039400</td>
+                        <td>1580</td>
+                        <td>4</td>
+                        <td>PIL</td>
+                        <td>3008687</td>
+                        <td>18-May</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>TAXW60057400</td>
+                        <td>944</td>
+                        <td>2</td>
+                        <td>PIL</td>
+                        <td>3008764</td>
+                        <td>04-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>TAXW60058500</td>
+                        <td>1185</td>
+                        <td>3</td>
+                        <td>PIL</td>
+                        <td>3008792</td>
+                        <td>04-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800807</td>
+                        <td>954</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008783</td>
+                        <td>*12-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800750</td>
+                        <td>472</td>
+                        <td>1</td>
+                        <td>CMA</td>
+                        <td>3008784</td>
+                        <td>*12-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800842</td>
+                        <td>800</td>
+                        <td>1</td>
+                        <td>CMA</td>
+                        <td>3008789</td>
+                        <td>*12-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800822</td>
+                        <td>2932</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008787</td>
+                        <td>*12-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800838</td>
+                        <td>2355</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008788</td>
+                        <td>*12-Jun</td>
+                        <td class="cell-green"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2853479</td>
+                        <td>3096</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008842</td>
+                        <td>*22-Jun</td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2800861</td>
+                        <td>520</td>
+                        <td>1</td>
+                        <td>CMA</td>
+                        <td>3008834</td>
+                        <td>*22-Jun</td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2866067E</td>
+                        <td>790</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008877</td>
+                        <td>*22-Jun</td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <tr>
+                        <td>QGD2897428</td>
+                        <td>790</td>
+                        <td>2</td>
+                        <td>CMA</td>
+                        <td>3008878</td>
+                        <td>*22-Jun</td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                        <td class="cell-red"></td>
+                    </tr>
+                    <!-- Add your remaining 17 rows here -->
+                </tbody>
+            </table>
+        </div>
 
-  <script>
+        <!-- UPDATED GLOSSARY with your new terms -->
+        <div class="glossary-text">
+            <strong>BILL:</strong> Bill of Lading &nbsp;&nbsp;
+            <strong>QTY:</strong> Quantity &nbsp;&nbsp;
+            <strong>Number of containers:</strong> Container count &nbsp;&nbsp;
+            <strong>Agent:</strong> Shipping Agent &nbsp;&nbsp;
+            <strong>Invoice REF:</strong> Invoice Reference &nbsp;&nbsp;
+            <strong>Arrival:</strong> Arrival date &nbsp;&nbsp;
+            <strong>Telex:</strong> Telex release &nbsp;&nbsp;
+            <strong>FC:</strong> Final Conformity &nbsp;&nbsp;
+            <strong>IM:</strong> Import Form
+            <br>
+            <span class="swatch swatch-green"></span> = Received &nbsp;&nbsp;&nbsp;
+            <span class="swatch swatch-red"></span> = NOT received
+            <br>
+            <strong>* Estimated Arrival, subject to changes.</strong>
+        </div>
+
+        <div class="footer">
+            Powered by Algaly Alhaj for digital solutions
+        </div>
+    </div>
+</div>
+
+<script>
     (function() {
-        // Wait for the entire page to load and the library to be ready
-        window.addEventListener('DOMContentLoaded', function() {
+        function ready(fn) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fn);
+            } else {
+                fn();
+            }
+        }
+        
+        ready(function() {
             const printBtn = document.getElementById('printBtn');
             const pdfBtn = document.getElementById('pdfBtn');
-
+            
             if (printBtn) {
                 printBtn.addEventListener('click', function() {
                     window.print();
                 });
             }
-
+            
             if (pdfBtn) {
                 pdfBtn.addEventListener('click', function() {
-                    // Check if html2pdf is available
-                    if (typeof html2pdf === 'undefined') {
-                        alert('PDF library failed to load. Please check your internet connection and reload the page. Falling back to Print -> Save as PDF.');
-                        window.print();
-                        return;
-                    }
-                    const element = document.getElementById('pdfContent');
-                    const opt = {
-                        margin: [0.5, 0.5, 0.5, 0.5],
-                        filename: 'BOARG_Report.pdf',
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2, letterRendering: true },
-                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                    };
-                    html2pdf().set(opt).from(element).save().catch(function(err) {
-                        console.error('PDF generation error:', err);
-                        alert('Could not generate PDF. Try using the Print button and select "Save as PDF".');
-                    });
+                    const originalText = pdfBtn.textContent;
+                    pdfBtn.textContent = '⏳ Generating PDF...';
+                    pdfBtn.disabled = true;
+                    
+                    setTimeout(function() {
+                        try {
+                            if (typeof html2pdf === 'undefined') {
+                                alert('PDF library not loaded. Use Print → "Save as PDF" instead.');
+                                window.print();
+                                pdfBtn.textContent = originalText;
+                                pdfBtn.disabled = false;
+                                return;
+                            }
+                            
+                            const element = document.getElementById('pdfContent');
+                            const opt = {
+                                margin: [0.4, 0.4, 0.4, 0.4],
+                                filename: 'BOARG_Report.pdf',
+                                image: { type: 'jpeg', quality: 0.95 },
+                                html2canvas: { 
+                                    scale: 2.5, 
+                                    letterRendering: true, 
+                                    backgroundColor: '#ffffff',
+                                    logging: false
+                                },
+                                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+                            };
+                            
+                            html2pdf().set(opt).from(element).save().then(function() {
+                                pdfBtn.textContent = originalText;
+                                pdfBtn.disabled = false;
+                            }).catch(function(err) {
+                                console.error('PDF error:', err);
+                                alert('PDF failed. Try Print button → "Save as PDF".');
+                                pdfBtn.textContent = originalText;
+                                pdfBtn.disabled = false;
+                            });
+                        } catch(err) {
+                            console.error('PDF exception:', err);
+                            alert('Error generating PDF. Use Print button.');
+                            pdfBtn.textContent = originalText;
+                            pdfBtn.disabled = false;
+                        }
+                    }, 50);
                 });
             }
         });
     })();
 </script>
-   </body>
- </html>
-</DOCTYPE>
+</body>
+</html>
