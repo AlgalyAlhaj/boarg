@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ALGALY ALHAJ AHMED</title>
-<link rel="icon" type="image/png" href="https://algalyalhaj.github.io/boarg/icon.png">
+    <link rel="icon" type="image/png" href="https://algalyalhaj.github.io/boarg/icon.png">
     <style>
         * {
             box-sizing: border-box;
@@ -40,6 +40,17 @@
         .action-btn:active {
             background-color: #e0e0e0;
         }
+        .action-btn.primary {
+            background-color: #d7ecff;
+            border-color: #7fb8e6;
+        }
+        .action-btn.danger-mini {
+            background-color: #ffe0e0;
+            border-color: #e08a8a;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+        }
         h1 {
             margin-bottom: 5px;
             font-size: 1.8rem;
@@ -69,6 +80,8 @@
             font-size: 1.1rem;
             text-decoration: underline;
             margin: 5px 0;
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
         }
         .update-line {
@@ -78,6 +91,14 @@
             font-weight: normal;
             margin-left: 10px;
             white-space: nowrap;
+        }
+        .editable {
+            outline: none;
+            border-bottom: 1px dashed transparent;
+        }
+        .editable:hover, .editable:focus {
+            border-bottom: 1px dashed #999;
+            background-color: #fffbe6;
         }
         .boarg-line {
             font-weight: bold;
@@ -93,7 +114,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            min-width: 700px;
+            min-width: 750px;
             font-size: 0.8rem;
         }
         th, td {
@@ -106,6 +127,9 @@
             font-weight: bold;
             background-color: #f2f2f2;
         }
+        td.editable-cell {
+            cursor: text;
+        }
         /* Narrow widths for the last 3 columns (Telex, FC, IM) */
         th:nth-child(7), td:nth-child(7),
         th:nth-child(8), td:nth-child(8),
@@ -115,11 +139,20 @@
             text-align: center;
             padding: 8px 4px;
         }
+        th:nth-child(10), td:nth-child(10) {
+            width: 34px;
+            max-width: 34px;
+            text-align: center;
+            padding: 4px;
+        }
         .cell-green {
             background-color: #90EE90;
         }
         .cell-red {
             background-color: #FFCCCC;
+        }
+        .status-cell {
+            cursor: pointer;
         }
         .footer {
             margin-top: 30px;
@@ -143,9 +176,15 @@
             font-size: 0.85rem;
             line-height: 1.5;
         }
-        
+        .hint {
+            font-size: 0.75rem;
+            color: #777;
+            font-style: italic;
+            margin: 8px 0 0 0;
+        }
+
         @media print {
-            .button-bar {
+            .button-bar, .no-print, .hint {
                 display: none;
             }
             body {
@@ -164,6 +203,10 @@
             th, td {
                 padding: 4px 6px;
             }
+            .editable {
+                border-bottom: none !important;
+                background-color: transparent !important;
+            }
             .cell-green, .cell-red,
             .swatch-green, .swatch-red,
             th {
@@ -172,7 +215,7 @@
                 color-adjust: exact !important;
             }
         }
-        
+
         @media (max-width: 600px) {
             body {
                 padding: 10px;
@@ -202,6 +245,9 @@
 <body>
 <div class="container">
     <div class="button-bar">
+        <button class="action-btn" id="nowBtn">🕒 Set Date/Time to Now</button>
+        <button class="action-btn" id="addRowBtn">➕ Add Row</button>
+        <button class="action-btn primary" id="exportBtn">💾 Export Updated Page</button>
         <button class="action-btn" id="printBtn">🖨️ Print</button>
         <button class="action-btn" id="pdfBtn">📄 Save PDF</button>
     </div>
@@ -214,8 +260,8 @@
         <div class="contact-line"><a href="mailto:algalyalhaj24@gmail.com" class="email-link">algalyalhaj24@gmail.com</a></div>
         <hr class="dotted-line">
         <div class="report-line">
-            Report Date: 27-Jul-2026
-            <span class="update-line">last update: 01:16 p.m.</span>
+            Report Date:&nbsp;<span class="editable" id="reportDate" contenteditable="true">27-Jul-2026</span>
+            <span class="update-line">last update: <span class="editable" id="lastUpdate" contenteditable="true">01:16 p.m.</span></span>
         </div>
         <div class="boarg-line"><u>BOARG TRADING ENTERPRISES</u></div>
 
@@ -223,100 +269,99 @@
             <table id="dataTable">
                 <thead>
                     <tr>
-                        <th>BILL</th><th>QTY</th><th>CNTR</th><th>Agent</th><th>Invoice REF</th><th>Arrival</th><th>Telex</th><th>FC</th><th>IM</th>
+                        <th>BILL</th><th>QTY</th><th>CNTR</th><th>Agent</th><th>Invoice REF</th><th>Arrival</th><th>Telex</th><th>FC</th><th>IM</th><th class="no-print"></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- YOUR 18 ROWS GO HERE -->
-                    <!-- Example row shown — replace with your actual data -->
-
                     <tr>
-                        <td>QGD2866067E</td>
-                        <td>790</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3008877</td>
-                        <td>*28-Jul</td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                    </tr>
-<tr>
-                        <td>QGD2897416</td>
-                        <td>1175</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3008886</td>
-                        <td>*28-Jul</td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                    </tr>
- <tr>
-                        <td>QGD2897428</td>
-                        <td>790</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3008878</td>
-                        <td>*28-Jul</td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                    </tr>
-
-                    <tr>
-                        <td>QGD2853479</td>
-                        <td>3096</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3008842</td>
-                        <td>*02-Aug</td>
-                        <td class="cell-red"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
+                        <td class="editable-cell" contenteditable="true">QGD2866067E</td>
+                        <td class="editable-cell" contenteditable="true">790</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008877</td>
+                        <td class="editable-cell" contenteditable="true">*28-Jul</td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
                     </tr>
                     <tr>
-                        <td>QGD2800861</td>
-                        <td>520</td>
-                        <td>1</td>
-                        <td>CMA</td>
-                        <td>3008834</td>
-                        <td>*02-Aug</td>
-                        <td class="cell-red"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-red"></td>
-                    </tr>
-                   
-                     <tr>
-                        <td>QGD2800847</td>
-                        <td>790</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3008833</td>
-                        <td>*02-Aug</td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-red"></td>
+                        <td class="editable-cell" contenteditable="true">QGD2897416</td>
+                        <td class="editable-cell" contenteditable="true">1175</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008886</td>
+                        <td class="editable-cell" contenteditable="true">*28-Jul</td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
                     </tr>
-
-<tr>
-                        <td>QGD3058569</td>
-                        <td>790</td>
-                        <td>2</td>
-                        <td>CMA</td>
-                        <td>3009035</td>
-                        <td>*03-Aug</td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
-                        <td class="cell-green"></td>
+                    <tr>
+                        <td class="editable-cell" contenteditable="true">QGD2897428</td>
+                        <td class="editable-cell" contenteditable="true">790</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008878</td>
+                        <td class="editable-cell" contenteditable="true">*28-Jul</td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
                     </tr>
-                      
-                    <!-- Add your remaining 17 rows here -->
+                    <tr>
+                        <td class="editable-cell" contenteditable="true">QGD2853479</td>
+                        <td class="editable-cell" contenteditable="true">3096</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008842</td>
+                        <td class="editable-cell" contenteditable="true">*02-Aug</td>
+                        <td class="cell-red status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
+                    </tr>
+                    <tr>
+                        <td class="editable-cell" contenteditable="true">QGD2800861</td>
+                        <td class="editable-cell" contenteditable="true">520</td>
+                        <td class="editable-cell" contenteditable="true">1</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008834</td>
+                        <td class="editable-cell" contenteditable="true">*02-Aug</td>
+                        <td class="cell-red status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-red status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
+                    </tr>
+                    <tr>
+                        <td class="editable-cell" contenteditable="true">QGD2800847</td>
+                        <td class="editable-cell" contenteditable="true">790</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3008833</td>
+                        <td class="editable-cell" contenteditable="true">*02-Aug</td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-red status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
+                    </tr>
+                    <tr>
+                        <td class="editable-cell" contenteditable="true">QGD3058569</td>
+                        <td class="editable-cell" contenteditable="true">790</td>
+                        <td class="editable-cell" contenteditable="true">2</td>
+                        <td class="editable-cell" contenteditable="true">CMA</td>
+                        <td class="editable-cell" contenteditable="true">3009035</td>
+                        <td class="editable-cell" contenteditable="true">*03-Aug</td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="cell-green status-cell"></td>
+                        <td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+        <p class="hint">Tip: click any text cell to edit it. Click a Telex/FC/IM cell to toggle green ⇄ red.</p>
 
-        <!-- UPDATED GLOSSARY with your new terms -->
         <div class="glossary-text">
             <strong>BILL:</strong> Bill of Lading &nbsp;&nbsp;
             <strong>QTY:</strong> Quantity &nbsp;&nbsp;
@@ -349,23 +394,128 @@
                 fn();
             }
         }
-        
+
+        function formatDate(d) {
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const day = String(d.getDate()).padStart(2, '0');
+            return day + '-' + months[d.getMonth()] + '-' + d.getFullYear();
+        }
+
+        function formatTime(d) {
+            let h = d.getHours();
+            const m = String(d.getMinutes()).padStart(2, '0');
+            const ampm = h >= 12 ? 'p.m.' : 'a.m.';
+            h = h % 12;
+            if (h === 0) h = 12;
+            return String(h).padStart(2, '0') + ':' + m + ' ' + ampm;
+        }
+
+        function attachRowHandlers(row) {
+            row.querySelectorAll('.status-cell').forEach(function(cell) {
+                cell.addEventListener('click', function() {
+                    if (cell.classList.contains('cell-green')) {
+                        cell.classList.remove('cell-green');
+                        cell.classList.add('cell-red');
+                    } else {
+                        cell.classList.remove('cell-red');
+                        cell.classList.add('cell-green');
+                    }
+                });
+            });
+            const delBtn = row.querySelector('.del-row');
+            if (delBtn) {
+                delBtn.addEventListener('click', function() {
+                    if (confirm('Delete this row?')) {
+                        row.remove();
+                    }
+                });
+            }
+        }
+
         ready(function() {
             const printBtn = document.getElementById('printBtn');
             const pdfBtn = document.getElementById('pdfBtn');
-            
+            const nowBtn = document.getElementById('nowBtn');
+            const addRowBtn = document.getElementById('addRowBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const tableBody = document.getElementById('tableBody');
+
+            document.querySelectorAll('#tableBody tr').forEach(attachRowHandlers);
+
             if (printBtn) {
                 printBtn.addEventListener('click', function() {
                     window.print();
                 });
             }
-            
+
+            if (nowBtn) {
+                nowBtn.addEventListener('click', function() {
+                    const now = new Date();
+                    document.getElementById('reportDate').textContent = formatDate(now);
+                    document.getElementById('lastUpdate').textContent = formatTime(now);
+                });
+            }
+
+            if (addRowBtn) {
+                addRowBtn.addEventListener('click', function() {
+                    const row = document.createElement('tr');
+                    row.innerHTML =
+                        '<td class="editable-cell" contenteditable="true">New Bill</td>' +
+                        '<td class="editable-cell" contenteditable="true">0</td>' +
+                        '<td class="editable-cell" contenteditable="true">1</td>' +
+                        '<td class="editable-cell" contenteditable="true">CMA</td>' +
+                        '<td class="editable-cell" contenteditable="true">0000000</td>' +
+                        '<td class="editable-cell" contenteditable="true">*--</td>' +
+                        '<td class="cell-red status-cell"></td>' +
+                        '<td class="cell-red status-cell"></td>' +
+                        '<td class="cell-red status-cell"></td>' +
+                        '<td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>';
+                    tableBody.appendChild(row);
+                    attachRowHandlers(row);
+                    row.querySelector('.editable-cell').focus();
+                });
+            }
+
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function() {
+                    // Clone the whole document, strip the editing affordances,
+                    // and bake current values into plain attributes so the
+                    // exported file is a clean static page (same as manual edits).
+                    const clone = document.documentElement.cloneNode(true);
+
+                    clone.querySelectorAll('[contenteditable]').forEach(function(el) {
+                        el.removeAttribute('contenteditable');
+                    });
+                    clone.querySelectorAll('.status-cell').forEach(function(el) {
+                        el.classList.remove('status-cell');
+                    });
+                    clone.querySelectorAll('.no-print').forEach(function(el) {
+                        el.remove();
+                    });
+                    const hint = clone.querySelector('.hint');
+                    if (hint) hint.remove();
+
+                    const doctype = '<!DOCTYPE html>\n';
+                    const html = doctype + clone.outerHTML;
+
+                    const blob = new Blob([html], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'BOARG_Report.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                });
+            }
+
             if (pdfBtn) {
                 pdfBtn.addEventListener('click', function() {
                     const originalText = pdfBtn.textContent;
                     pdfBtn.textContent = '⏳ Generating PDF...';
                     pdfBtn.disabled = true;
-                    
+
                     setTimeout(function() {
                         try {
                             if (typeof html2pdf === 'undefined') {
@@ -375,21 +525,21 @@
                                 pdfBtn.disabled = false;
                                 return;
                             }
-                            
+
                             const element = document.getElementById('pdfContent');
                             const opt = {
                                 margin: [0.4, 0.4, 0.4, 0.4],
                                 filename: 'BOARG_Report.pdf',
                                 image: { type: 'jpeg', quality: 0.95 },
-                                html2canvas: { 
-                                    scale: 2.5, 
-                                    letterRendering: true, 
+                                html2canvas: {
+                                    scale: 2.5,
+                                    letterRendering: true,
                                     backgroundColor: '#ffffff',
                                     logging: false
                                 },
                                 jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
                             };
-                            
+
                             html2pdf().set(opt).from(element).save().then(function() {
                                 pdfBtn.textContent = originalText;
                                 pdfBtn.disabled = false;
