@@ -117,6 +117,10 @@
             min-width: 780px;
             font-size: 0.8rem;
         }
+        tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
         th, td {
             border: 1px solid #aaa;
             padding: 8px 10px;
@@ -199,8 +203,89 @@
             margin: 8px 0 0 0;
         }
 
+        /* Scan overlay */
+        .scan-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .scan-overlay.active {
+            display: flex;
+        }
+        .scan-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 22px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .scan-card h3 {
+            margin-top: 0;
+        }
+        .scan-field {
+            margin-bottom: 12px;
+        }
+        .scan-field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .scan-field input {
+            width: 100%;
+            padding: 7px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        .scan-progress {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .scan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+        .scan-raw {
+            margin-top: 14px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+        .scan-raw textarea {
+            width: 100%;
+            height: 90px;
+            font-size: 0.7rem;
+            font-family: monospace;
+            margin-top: 6px;
+        }
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #ddd;
+            border-top-color: #555;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 6px 0 14px 0;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @media print {
-            .button-bar, .no-print, .hint {
+            .button-bar, .no-print, .hint, .scan-overlay {
                 display: none !important;
             }
             .arrival-input {
@@ -263,13 +348,18 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
 </head>
 <body>
 <div class="container">
     <div class="button-bar">
+        <button class="action-btn" id="scanBtn">📷 Scan Bill of Lading</button>
+        <input type="file" id="blFileInput" accept="image/*,application/pdf" style="display:none">
         <button class="action-btn" id="nowBtn">🕒 Set Date/Time to Now</button>
         <button class="action-btn" id="addRowBtn">➕ Add Row</button>
         <button class="action-btn primary" id="exportBtn">💾 Export Updated Page</button>
+        <button class="action-btn" id="resetBtn">↺ Reset</button>
         <button class="action-btn" id="printBtn">🖨️ Print</button>
         <button class="action-btn" id="pdfBtn">📄 Save PDF</button>
     </div>
@@ -442,7 +532,7 @@
                 </tbody>
             </table>
         </div>
-        <p class="hint">Tip: click any text cell to edit it. Click a Telex/FC/IM cell to toggle green ⇄ red. Click the Arrival cell to pick a date.</p>
+        <p class="hint">Tip: click any text cell to edit it. Click a Telex/FC/IM cell to toggle green ⇄ red. Click the Arrival cell to pick a date. Use "Scan Bill of Lading" to auto-fill a new row. Your edits auto-save in this browser — use Reset to discard them.</p>
 
         <div class="glossary-text">
             <strong>BILL:</strong> Bill of Lading &nbsp;&nbsp;
@@ -467,6 +557,39 @@
     </div>
 </div>
 
+<div class="scan-overlay no-print" id="scanOverlay">
+    <div class="scan-card">
+        <div id="scanLoading">
+            <h3>Reading document…</h3>
+            <div class="spinner"></div>
+            <p class="scan-progress" id="scanProgressText">Starting…</p>
+        </div>
+        <div id="scanReview" style="display:none;">
+            <h3>Review extracted info</h3>
+            <div class="scan-field"><label>BILL</label><input id="scanBill" type="text"></div>
+            <div class="scan-field"><label>QTY</label><input id="scanQty" type="text"></div>
+            <div class="scan-field"><label>CNTR</label><input id="scanCntr" type="text"></div>
+            <div class="scan-field"><label>Agent</label><input id="scanAgent" type="text"></div>
+            <p class="scan-progress">Invoice REF and Arrival aren't on this document — add those yourself after.</p>
+            <details class="scan-raw">
+                <summary>Show raw scanned text (to double-check anything)</summary>
+                <textarea id="scanRawText" readonly></textarea>
+            </details>
+            <div class="scan-actions">
+                <button class="action-btn" id="scanCancelBtn">Cancel</button>
+                <button class="action-btn primary" id="scanAddBtn">➕ Add to Table</button>
+            </div>
+        </div>
+        <div id="scanErrorBox" style="display:none;">
+            <h3>Couldn't read that</h3>
+            <p class="scan-progress" id="scanErrorMsg"></p>
+            <div class="scan-actions">
+                <button class="action-btn" id="scanErrorCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     (function() {
         function ready(fn) {
@@ -478,6 +601,7 @@
         }
 
         const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const STORAGE_KEY = 'algaly_boarg_report_v2';
 
         function formatDate(d) {
             const day = String(d.getDate()).padStart(2, '0');
@@ -510,7 +634,74 @@
             }
         }
 
-        function attachRowHandlers(row) {
+        // ---------- Auto-save to this browser (localStorage) ----------
+
+        function collectState(tableBody) {
+            const rows = Array.from(tableBody.querySelectorAll('tr')).map(function(row) {
+                const cells = row.querySelectorAll('.editable-cell');
+                const arrivalInput = row.querySelector('.arrival-input');
+                const statusCells = row.querySelectorAll('.status-cell');
+                function isGreen(td) { return !!(td && td.classList.contains('cell-green')); }
+                return {
+                    bill: cells[0] ? cells[0].textContent : '',
+                    qty: cells[1] ? cells[1].textContent : '',
+                    cntr: cells[2] ? cells[2].textContent : '',
+                    agent: cells[3] ? cells[3].textContent : '',
+                    invoiceRef: cells[4] ? cells[4].textContent : '',
+                    arrival: arrivalInput ? arrivalInput.value : '',
+                    telex: isGreen(statusCells[0]) ? 'green' : 'red',
+                    fc: isGreen(statusCells[1]) ? 'green' : 'red',
+                    im: isGreen(statusCells[2]) ? 'green' : 'red'
+                };
+            });
+            return {
+                reportDate: document.getElementById('reportDate').textContent,
+                lastUpdate: document.getElementById('lastUpdate').textContent,
+                rows: rows
+            };
+        }
+
+        function saveState(tableBody) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState(tableBody)));
+            } catch (e) {
+                console.error('Could not auto-save to this browser:', e);
+            }
+        }
+
+        // Returns true if saved data was found and restored.
+        function restoreState(tableBody, createRowElement, attachRowHandlers) {
+            let raw;
+            try {
+                raw = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {
+                return false;
+            }
+            if (!raw) return false;
+            let state;
+            try {
+                state = JSON.parse(raw);
+            } catch (e) {
+                return false;
+            }
+            if (!state || !Array.isArray(state.rows)) return false;
+
+            if (typeof state.reportDate === 'string') {
+                document.getElementById('reportDate').textContent = state.reportDate;
+            }
+            if (typeof state.lastUpdate === 'string') {
+                document.getElementById('lastUpdate').textContent = state.lastUpdate;
+            }
+            tableBody.innerHTML = '';
+            state.rows.forEach(function(r) {
+                const row = createRowElement(r);
+                tableBody.appendChild(row);
+                attachRowHandlers(row);
+            });
+            return true;
+        }
+
+        function attachRowHandlers(row, tableBody) {
             row.querySelectorAll('.status-cell').forEach(function(cell) {
                 cell.addEventListener('click', function() {
                     if (cell.classList.contains('cell-green')) {
@@ -520,6 +711,7 @@
                         cell.classList.remove('cell-red');
                         cell.classList.add('cell-green');
                     }
+                    saveState(tableBody);
                 });
             });
             const arrivalInput = row.querySelector('.arrival-input');
@@ -527,6 +719,7 @@
                 syncArrivalPrintText(arrivalInput);
                 arrivalInput.addEventListener('change', function() {
                     syncArrivalPrintText(arrivalInput);
+                    saveState(tableBody);
                 });
             }
             const delBtn = row.querySelector('.del-row');
@@ -534,9 +727,162 @@
                 delBtn.addEventListener('click', function() {
                     if (confirm('Delete this row?')) {
                         row.remove();
+                        saveState(tableBody);
                     }
                 });
             }
+        }
+
+        // Builds one <tr> for the table. `data` (optional) pre-fills every field
+        // (e.g. from a scanned document, or from a previously auto-saved state).
+        function createRowElement(data) {
+            data = data || {};
+            const row = document.createElement('tr');
+
+            function makeEditableCell(text) {
+                const td = document.createElement('td');
+                td.className = 'editable-cell';
+                td.contentEditable = 'true';
+                td.textContent = text || '';
+                return td;
+            }
+
+            row.appendChild(makeEditableCell(data.bill || 'New Bill'));
+            row.appendChild(makeEditableCell(data.qty || '0'));
+            row.appendChild(makeEditableCell(data.cntr || '1'));
+            row.appendChild(makeEditableCell(data.agent || 'CMA'));
+            row.appendChild(makeEditableCell(data.invoiceRef || ''));
+
+            const arrivalTd = document.createElement('td');
+            arrivalTd.className = 'arrival-cell';
+            const arrivalInput = document.createElement('input');
+            arrivalInput.type = 'date';
+            arrivalInput.className = 'arrival-input';
+            arrivalInput.value = data.arrival || '';
+            arrivalTd.appendChild(arrivalInput);
+            const arrivalSpan = document.createElement('span');
+            arrivalSpan.className = 'arrival-print-text';
+            arrivalSpan.textContent = formatArrival(data.arrival || '');
+            arrivalTd.appendChild(arrivalSpan);
+            row.appendChild(arrivalTd);
+
+            ['telex', 'fc', 'im'].forEach(function(key) {
+                const td = document.createElement('td');
+                const colorClass = (data[key] === 'green') ? 'cell-green' : 'cell-red';
+                td.className = colorClass + ' status-cell';
+                row.appendChild(td);
+            });
+
+            const delTd = document.createElement('td');
+            delTd.className = 'no-print';
+            const delBtn = document.createElement('button');
+            delBtn.className = 'action-btn danger-mini del-row';
+            delBtn.textContent = '✕';
+            delTd.appendChild(delBtn);
+            row.appendChild(delTd);
+
+            return row;
+        }
+
+        // ---------- PDF / print rendering mode ----------
+        // Temporarily hides editing-only affordances and swaps each Arrival
+        // date-picker for its plain-text equivalent, so what gets measured
+        // and captured matches the final PDF/print output exactly.
+        function applyOutputMode() {
+            document.querySelectorAll('.hint').forEach(function(el) { el.style.display = 'none'; });
+            document.querySelectorAll('.no-print').forEach(function(el) { el.style.display = 'none'; });
+            document.querySelectorAll('.arrival-input').forEach(function(el) { el.style.display = 'none'; });
+            document.querySelectorAll('.arrival-print-text').forEach(function(el) { el.style.display = 'inline'; });
+        }
+        function removeOutputMode() {
+            document.querySelectorAll('.hint').forEach(function(el) { el.style.display = ''; });
+            document.querySelectorAll('.no-print').forEach(function(el) { el.style.display = ''; });
+            document.querySelectorAll('.arrival-input').forEach(function(el) { el.style.display = ''; });
+            document.querySelectorAll('.arrival-print-text').forEach(function(el) { el.style.display = 'none'; });
+        }
+
+        // ---------- Bill of Lading OCR scanning ----------
+
+        function parseBillOfLading(rawText) {
+            const upper = rawText.toUpperCase();
+            const lines = upper.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+
+            let bill = '';
+            const blLabelIdx = lines.findIndex(function(l) { return l.includes('BILL OF LADING NUMBER'); });
+            if (blLabelIdx !== -1) {
+                for (let i = blLabelIdx; i < Math.min(blLabelIdx + 4, lines.length); i++) {
+                    const m = lines[i].match(/\b[A-Z]{2,6}\d{6,9}[A-Z]?\b/);
+                    if (m) { bill = m[0]; break; }
+                }
+            }
+            if (!bill) {
+                const m = upper.match(/\b[A-Z]{2,6}\d{6,9}[A-Z]?\b/);
+                if (m) bill = m[0];
+            }
+
+            let cntr = '', qty = '';
+            const sayIdx = lines.findIndex(function(l) { return l.indexOf('SAY ') === 0 || l.indexOf('SAY') === 0; });
+            if (sayIdx > 1) {
+                const qtyMatch = lines[sayIdx - 1].match(/(\d[\d,]*)\s*PIECE/);
+                if (qtyMatch) qty = qtyMatch[1].replace(/,/g, '');
+                const cntrMatch = lines[sayIdx - 2].match(/^(\d+)\s*X\s*\d{2}\s*(?:HC|HQ|GP|FT|RF)?/);
+                if (cntrMatch) cntr = cntrMatch[1];
+            }
+            if (!qty) {
+                const pieceNums = Array.from(upper.matchAll(/(\d[\d,]*)\s*PIECE/g)).map(function(m) {
+                    return parseInt(m[1].replace(/,/g, ''), 10);
+                });
+                if (pieceNums.length) qty = String(Math.max.apply(null, pieceNums));
+            }
+            if (!cntr) {
+                const containerCodes = upper.match(/\b[A-Z]{4}\d{6,7}\b/g) || [];
+                if (containerCodes.length) cntr = String(containerCodes.length);
+            }
+
+            let agent = '';
+            const CARRIER_MAP = [
+                { keyword: 'CMA CGM', code: 'CMA' },
+                { keyword: 'PACIFIC INTERNATIONAL LINES', code: 'PIL' },
+                { keyword: ' PIL ', code: 'PIL' },
+                { keyword: 'MEDITERRANEAN SHIPPING', code: 'MSC' },
+                { keyword: ' MSC ', code: 'MSC' },
+                { keyword: 'MAERSK', code: 'MAERSK' },
+                { keyword: 'SHARAF', code: 'SHARAF' }
+            ];
+            for (let i = 0; i < CARRIER_MAP.length; i++) {
+                if (upper.indexOf(CARRIER_MAP[i].keyword) !== -1) { agent = CARRIER_MAP[i].code; break; }
+            }
+
+            return { bill: bill, qty: qty, cntr: cntr, agent: agent };
+        }
+
+        async function renderPdfFirstPageToCanvas(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 2.5 });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+            return canvas;
+        }
+
+        async function extractText(file, onProgress) {
+            let source = file;
+            if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
+                onProgress('Rendering PDF page…');
+                source = await renderPdfFirstPageToCanvas(file);
+            }
+            const result = await Tesseract.recognize(source, 'eng', {
+                logger: function(m) {
+                    if (m.status && typeof m.progress === 'number') {
+                        onProgress('Reading document… ' + m.status + ' (' + Math.round(m.progress * 100) + '%)');
+                    }
+                }
+            });
+            return result.data.text;
         }
 
         ready(function() {
@@ -545,9 +891,36 @@
             const nowBtn = document.getElementById('nowBtn');
             const addRowBtn = document.getElementById('addRowBtn');
             const exportBtn = document.getElementById('exportBtn');
+            const resetBtn = document.getElementById('resetBtn');
             const tableBody = document.getElementById('tableBody');
+            const reportDateEl = document.getElementById('reportDate');
+            const lastUpdateEl = document.getElementById('lastUpdate');
 
-            document.querySelectorAll('#tableBody tr').forEach(attachRowHandlers);
+            // Restore any previously auto-saved edits from this browser;
+            // otherwise keep the data baked into the page.
+            const restored = restoreState(tableBody, createRowElement, function(row) {
+                attachRowHandlers(row, tableBody);
+            });
+            if (!restored) {
+                document.querySelectorAll('#tableBody tr').forEach(function(row) {
+                    attachRowHandlers(row, tableBody);
+                });
+            }
+
+            // Auto-save whenever a text cell, the report date, or the last-update
+            // field is edited (contenteditable fires 'input' as you type).
+            tableBody.addEventListener('input', function(e) {
+                if (e.target.classList && e.target.classList.contains('editable-cell')) {
+                    saveState(tableBody);
+                }
+            });
+            if (reportDateEl) reportDateEl.addEventListener('input', function() { saveState(tableBody); });
+            if (lastUpdateEl) lastUpdateEl.addEventListener('input', function() { saveState(tableBody); });
+
+            // Keep the native browser Print / "Save as PDF" dialog consistent
+            // with the Save PDF button: hide editing-only bits during printing.
+            window.addEventListener('beforeprint', applyOutputMode);
+            window.addEventListener('afterprint', removeOutputMode);
 
             if (printBtn) {
                 printBtn.addEventListener('click', function() {
@@ -558,28 +931,28 @@
             if (nowBtn) {
                 nowBtn.addEventListener('click', function() {
                     const now = new Date();
-                    document.getElementById('reportDate').textContent = formatDate(now);
-                    document.getElementById('lastUpdate').textContent = formatTime(now);
+                    reportDateEl.textContent = formatDate(now);
+                    lastUpdateEl.textContent = formatTime(now);
+                    saveState(tableBody);
                 });
             }
 
             if (addRowBtn) {
                 addRowBtn.addEventListener('click', function() {
-                    const row = document.createElement('tr');
-                    row.innerHTML =
-                        '<td class="editable-cell" contenteditable="true">New Bill</td>' +
-                        '<td class="editable-cell" contenteditable="true">0</td>' +
-                        '<td class="editable-cell" contenteditable="true">1</td>' +
-                        '<td class="editable-cell" contenteditable="true">CMA</td>' +
-                        '<td class="editable-cell" contenteditable="true">0000000</td>' +
-                        '<td class="arrival-cell"><input type="date" class="arrival-input" value=""><span class="arrival-print-text"></span></td>' +
-                        '<td class="cell-red status-cell"></td>' +
-                        '<td class="cell-red status-cell"></td>' +
-                        '<td class="cell-red status-cell"></td>' +
-                        '<td class="no-print"><button class="action-btn danger-mini del-row">✕</button></td>';
+                    const row = createRowElement();
                     tableBody.appendChild(row);
-                    attachRowHandlers(row);
+                    attachRowHandlers(row, tableBody);
                     row.querySelector('.editable-cell').focus();
+                    saveState(tableBody);
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    if (confirm('This clears your saved edits on this device and reloads the page\u2019s original data. Continue?')) {
+                        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+                        location.reload();
+                    }
                 });
             }
 
@@ -596,10 +969,9 @@
                     clone.querySelectorAll('.status-cell').forEach(function(el) {
                         el.classList.remove('status-cell');
                     });
-                    // Bake each Arrival date-picker into plain "*DD-Mon" text.
+                    const liveArrivalCells = document.querySelectorAll('.arrival-cell');
                     clone.querySelectorAll('.arrival-cell').forEach(function(cell, i) {
-                        const liveCell = document.querySelectorAll('.arrival-cell')[i];
-                        const liveInput = liveCell.querySelector('.arrival-input');
+                        const liveInput = liveArrivalCells[i].querySelector('.arrival-input');
                         cell.textContent = formatArrival(liveInput ? liveInput.value : '');
                         cell.classList.remove('arrival-cell');
                     });
@@ -608,6 +980,8 @@
                     });
                     const hint = clone.querySelector('.hint');
                     if (hint) hint.remove();
+                    const scanOverlayClone = clone.querySelector('.scan-overlay');
+                    if (scanOverlayClone) scanOverlayClone.remove();
 
                     const doctype = '<!DOCTYPE html>\n';
                     const html = doctype + clone.outerHTML;
@@ -625,72 +999,137 @@
             }
 
             if (pdfBtn) {
-                pdfBtn.addEventListener('click', function() {
+                pdfBtn.addEventListener('click', async function() {
                     const originalText = pdfBtn.textContent;
                     pdfBtn.textContent = '⏳ Generating PDF...';
                     pdfBtn.disabled = true;
 
-                    // Make sure the hidden "print text" for each Arrival cell
-                    // is up to date before we hand the DOM to html2canvas.
-                    document.querySelectorAll('.arrival-input').forEach(syncArrivalPrintText);
-
-                    setTimeout(function() {
-                        try {
-                            if (typeof html2pdf === 'undefined') {
-                                alert('PDF library not loaded. Use Print → "Save as PDF" instead.');
-                                window.print();
-                                pdfBtn.textContent = originalText;
-                                pdfBtn.disabled = false;
-                                return;
-                            }
-
-                            const element = document.getElementById('pdfContent');
-                            const opt = {
-                                margin: [0.4, 0.4, 0.4, 0.4],
-                                filename: 'BOARG_Report.pdf',
-                                image: { type: 'jpeg', quality: 0.95 },
-                                html2canvas: {
-                                    scale: 2.5,
-                                    letterRendering: true,
-                                    backgroundColor: '#ffffff',
-                                    logging: false,
-                                    // html2canvas renders the live DOM and does NOT apply
-                                    // @media print rules, so strip the tip text, delete
-                                    // buttons, and date-picker inputs (replaced by their
-                                    // plain-text equivalents) on the cloned copy it uses.
-                                    onclone: function(clonedDoc) {
-                                        const hintEl = clonedDoc.querySelector('.hint');
-                                        if (hintEl) hintEl.remove();
-                                        clonedDoc.querySelectorAll('.no-print').forEach(function(el) {
-                                            el.remove();
-                                        });
-                                        clonedDoc.querySelectorAll('.arrival-input').forEach(function(el) {
-                                            el.style.display = 'none';
-                                        });
-                                        clonedDoc.querySelectorAll('.arrival-print-text').forEach(function(el) {
-                                            el.style.display = 'inline';
-                                        });
-                                    }
-                                },
-                                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
-                            };
-
-                            html2pdf().set(opt).from(element).save().then(function() {
-                                pdfBtn.textContent = originalText;
-                                pdfBtn.disabled = false;
-                            }).catch(function(err) {
-                                console.error('PDF error:', err);
-                                alert('PDF failed. Try Print button → "Save as PDF".');
-                                pdfBtn.textContent = originalText;
-                                pdfBtn.disabled = false;
-                            });
-                        } catch(err) {
-                            console.error('PDF exception:', err);
-                            alert('Error generating PDF. Use Print button.');
-                            pdfBtn.textContent = originalText;
-                            pdfBtn.disabled = false;
+                    try {
+                        if (typeof html2pdf === 'undefined') {
+                            alert('PDF library not loaded. Use Print → "Save as PDF" instead.');
+                            window.print();
+                            return;
                         }
-                    }, 50);
+
+                        document.querySelectorAll('.arrival-input').forEach(syncArrivalPrintText);
+                        applyOutputMode();
+                        // Let the browser reflow after the visibility changes above
+                        // so the measurements below reflect the final layout.
+                        await new Promise(function(resolve) { setTimeout(resolve, 30); });
+
+                        const element = document.getElementById('pdfContent');
+                        const pxPerInch = 96;
+                        const marginIn = 0.4;
+                        const widthIn = (element.scrollWidth / pxPerInch) + (marginIn * 2);
+                        const heightIn = (element.scrollHeight / pxPerInch) + (marginIn * 2);
+
+                        const opt = {
+                            margin: [marginIn, marginIn, marginIn, marginIn],
+                            filename: 'BOARG_Report.pdf',
+                            image: { type: 'jpeg', quality: 0.95 },
+                            html2canvas: {
+                                scale: 2.5,
+                                letterRendering: true,
+                                backgroundColor: '#ffffff',
+                                logging: false
+                            },
+                            jsPDF: { unit: 'in', format: [widthIn, heightIn] },
+                            // Extra safety net: if the page ever does need to split,
+                            // never cut a row in half — push the whole row over instead.
+                            pagebreak: { mode: ['css', 'legacy'], avoid: 'tr' }
+                        };
+
+                        await html2pdf().set(opt).from(element).save();
+                    } catch (err) {
+                        console.error('PDF error:', err);
+                        alert('PDF failed. Try Print button → "Save as PDF".');
+                    } finally {
+                        removeOutputMode();
+                        pdfBtn.textContent = originalText;
+                        pdfBtn.disabled = false;
+                    }
+                });
+            }
+
+            // ---------- Scan Bill of Lading wiring ----------
+            const scanBtn = document.getElementById('scanBtn');
+            const blFileInput = document.getElementById('blFileInput');
+            const scanOverlay = document.getElementById('scanOverlay');
+            const scanLoading = document.getElementById('scanLoading');
+            const scanReview = document.getElementById('scanReview');
+            const scanErrorBox = document.getElementById('scanErrorBox');
+            const scanProgressText = document.getElementById('scanProgressText');
+            const scanCancelBtn = document.getElementById('scanCancelBtn');
+            const scanAddBtn = document.getElementById('scanAddBtn');
+            const scanErrorCloseBtn = document.getElementById('scanErrorCloseBtn');
+
+            function openOverlayLoading() {
+                scanOverlay.classList.add('active');
+                scanLoading.style.display = 'block';
+                scanReview.style.display = 'none';
+                scanErrorBox.style.display = 'none';
+                scanProgressText.textContent = 'Starting…';
+            }
+            function closeOverlay() {
+                scanOverlay.classList.remove('active');
+            }
+            function showReviewForm(parsed, rawText) {
+                scanLoading.style.display = 'none';
+                scanReview.style.display = 'block';
+                document.getElementById('scanBill').value = parsed.bill;
+                document.getElementById('scanQty').value = parsed.qty;
+                document.getElementById('scanCntr').value = parsed.cntr;
+                document.getElementById('scanAgent').value = parsed.agent;
+                document.getElementById('scanRawText').value = rawText;
+            }
+            function showScanError(msg) {
+                scanLoading.style.display = 'none';
+                scanErrorBox.style.display = 'block';
+                document.getElementById('scanErrorMsg').textContent = msg;
+            }
+
+            if (scanBtn && blFileInput) {
+                scanBtn.addEventListener('click', function() {
+                    blFileInput.click();
+                });
+                blFileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    openOverlayLoading();
+                    try {
+                        const text = await extractText(file, function(msg) {
+                            scanProgressText.textContent = msg;
+                        });
+                        const parsed = parseBillOfLading(text);
+                        showReviewForm(parsed, text);
+                    } catch (err) {
+                        console.error('OCR error:', err);
+                        const reason = (err && err.message) ? err.message : String(err);
+                        const isLocalFile = window.location.protocol === 'file:';
+                        const hint = isLocalFile
+                            ? 'This page is open as a local file — Scan needs to be opened from a real web address (e.g. your GitHub Pages link) to load the OCR engine.'
+                            : 'Try a clearer, well-lit photo (or a PDF), or enter the row manually.';
+                        showScanError(hint + '\n\nDetails: ' + reason);
+                    }
+                    blFileInput.value = '';
+                });
+            }
+            if (scanCancelBtn) scanCancelBtn.addEventListener('click', closeOverlay);
+            if (scanErrorCloseBtn) scanErrorCloseBtn.addEventListener('click', closeOverlay);
+            if (scanAddBtn) {
+                scanAddBtn.addEventListener('click', function() {
+                    const data = {
+                        bill: document.getElementById('scanBill').value.trim(),
+                        qty: document.getElementById('scanQty').value.trim(),
+                        cntr: document.getElementById('scanCntr').value.trim(),
+                        agent: document.getElementById('scanAgent').value.trim()
+                    };
+                    const row = createRowElement(data);
+                    tableBody.appendChild(row);
+                    attachRowHandlers(row, tableBody);
+                    closeOverlay();
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    saveState(tableBody);
                 });
             }
         });
