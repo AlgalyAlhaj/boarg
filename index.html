@@ -100,8 +100,8 @@
   /* ---------- Print rules ---------- */
   .no-print{ }
   @media print{
-    @page{ size: A4 landscape; margin: 6mm; }
-    html, body{ font-size:12px; }
+    @page{ size: A4; margin: 8mm; }
+    html, body{ font-size:12.5px; }
     .no-print{ display:none !important; }
     .page{ max-width:none; padding:0; }
     .letterhead{ padding-bottom:4px; margin-bottom:6px; }
@@ -110,16 +110,33 @@
     .letterhead .contact, .letterhead .address, .letterhead .email{ font-size:11px; margin-top:1px; }
     .meta-row{ padding:5px 10px; margin-bottom:6px; font-size:12px; gap:16px; }
     .meta-field input[type=text]{ font-size:12px; padding:1px 3px; }
-    thead th{ font-size:12px; padding:4px 3px; }
-    tbody td{ padding:3px 3px; font-size:12px; }
-    .cell-input{ font-size:12px; padding:2px 1px; }
-    .toggle-btn{ width:15px; height:15px; }
+    thead th{ font-size:12.5px; padding:4px 3px; }
+    tbody td{ padding:3px 3px; font-size:12.5px; }
+    .cell-input{ font-size:12.5px; padding:2px 1px; }
+    .toggle-btn{ width:16px; height:16px; }
     .row-del{ width:0; height:0; }
     .legend{ margin-top:6px; font-size:11px; gap:16px; }
     .legend-box{ width:13px; height:13px; }
     .footer-note{ margin-top:5px; font-size:9.5px; }
     .branding{ margin-top:6px; font-size:8.5px; padding-top:3px; }
     tr{ page-break-inside:avoid; }
+  }
+  /* Landscape: plenty of width, so columns can stay at their normal widths */
+  @media print and (orientation: landscape){
+    th.col-date, td.col-date{ width:100px; }
+    th.col-toggle, td.col-toggle{ width:70px; }
+  }
+  /* Portrait: less width to work with, so narrow the fixed columns and trim
+     the font slightly to keep every column readable on one page */
+  @media print and (orientation: portrait){
+    html, body{ font-size:11px; }
+    thead th{ font-size:11px; padding:3px 2px; }
+    tbody td{ font-size:11px; padding:2.5px 2px; }
+    .cell-input{ font-size:11px; padding:1.5px 1px; }
+    th.col-date, td.col-date{ width:70px; }
+    th.col-toggle, td.col-toggle{ width:48px; }
+    .toggle-btn{ width:14px; height:14px; }
+    .legend-box{ width:12px; height:12px; }
   }
 </style>
 </head>
@@ -181,6 +198,11 @@
 </div>
 
 <script>
+// Unique storage key for THIS list only. If you duplicate this file to start
+// a new list, change this string (e.g. add a suffix) so the two files don't
+// share saved data — otherwise editing one will overwrite the other.
+const STORAGE_KEY = 'daily_report_state__amal_bawarij';
+
 let rows = [];
 let counter = 0;
 
@@ -194,17 +216,17 @@ function newRow(){
 // the page is opened with no saved data yet — "قائمة جديدة" always starts blank.
 function initialRows(){
   const data = [
-    {date:'2026-10-01', policy:'HS-S-SUDAN-2608-4',  qty:'491',  company:'CMA', invoice:'QGD3315888'},
-    {date:'2026-10-01', policy:'S-S-SUDAN-2608-23',  qty:'720',  company:'CMA', invoice:'QGD3339893'},
-    {date:'2026-10-01', policy:'S-S-SUDAN-2608-24',  qty:'860',  company:'CMA', invoice:'QGD3339582'},
-    {date:'2026-09-27', policy:'26HFAR033C-2',       qty:'944',  company:'CMA', invoice:'QGD3284235'},
-    {date:'2026-09-27', policy:'26HFAR033C-1',       qty:'472',  company:'CMA', invoice:'QGD3284687'},
-    {date:'2026-09-27', policy:'S-S-SUDAN-2607-34',  qty:'848',  company:'CMA', invoice:'QGD3294529'},
-    {date:'2026-10-01', policy:'26HFAR043',          qty:'1179', company:'CMA', invoice:'QGD3316242'},
-    {date:'2026-10-01', policy:'HS-S-SUDAN-2608-5',  qty:'790',  company:'CMA', invoice:'QGD3316226'},
-    {date:'2026-10-01', policy:'S-S-SUDAN-2607-85',  qty:'1004', company:'CMA', invoice:'QGD3316222'},
-    {date:'2026-10-01', policy:'S-SUDAN-2608-Z-10',  qty:'395',  company:'CMA', invoice:'QGD3375737'},
-    {date:'2026-10-10', policy:'S-S-SUDAN-2608-72',  qty:'790',  company:'PIL', invoice:'TAXW60154200'}
+    {date:'2026-10-01', policy:'QGD3315888',  qty:'491',  company:'CMA', invoice:'HS-S-SUDAN-2608-4'},
+    {date:'2026-10-01', policy:'QGD3339893',  qty:'720',  company:'CMA', invoice:'S-S-SUDAN-2608-23'},
+    {date:'2026-10-01', policy:'QGD3339582',  qty:'860',  company:'CMA', invoice:'S-S-SUDAN-2608-24'},
+    {date:'2026-09-27', policy:'QGD3284235',  qty:'944',  company:'CMA', invoice:'26HFAR033C-2'},
+    {date:'2026-09-27', policy:'QGD3284687',  qty:'472',  company:'CMA', invoice:'26HFAR033C-1'},
+    {date:'2026-09-27', policy:'QGD3294529',  qty:'848',  company:'CMA', invoice:'S-S-SUDAN-2607-34'},
+    {date:'2026-10-01', policy:'QGD3316242',  qty:'1179', company:'CMA', invoice:'26HFAR043'},
+    {date:'2026-10-01', policy:'QGD3316226',  qty:'790',  company:'CMA', invoice:'HS-S-SUDAN-2608-5'},
+    {date:'2026-10-01', policy:'QGD3316222',  qty:'1004', company:'CMA', invoice:'S-S-SUDAN-2607-85'},
+    {date:'2026-10-01', policy:'QGD3375737',  qty:'395',  company:'CMA', invoice:'S-SUDAN-2608-Z-10'},
+    {date:'2026-10-10', policy:'TAXW60154200',qty:'790',  company:'PIL', invoice:'S-S-SUDAN-2608-72'}
   ];
   return data.map(d => ({
     id: uid(), date: d.date, fak:false, im:false, match:false,
@@ -224,7 +246,7 @@ function sortRows(){
 
 function loadState(){
   try{
-    const saved = localStorage.getItem('daily_report_state');
+    const saved = localStorage.getItem(STORAGE_KEY);
     if(saved){
       const parsed = JSON.parse(saved);
       rows = parsed.rows || [];
@@ -242,7 +264,7 @@ function loadState(){
 
 function saveState(){
   try{
-    localStorage.setItem('daily_report_state', JSON.stringify({
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
       rows: rows,
       misterName: document.getElementById('misterName').value
     }));
