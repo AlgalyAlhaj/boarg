@@ -1,1182 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ALGALY ALHAJ AHMED</title>
-    <link rel="icon" type="image/png" href="https://algalyalhaj.github.io/boarg/icon.png">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            margin: 0;
-            padding: 15px;
-            background: white;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .button-bar {
-            text-align: center;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-        .action-btn {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 1rem;
-            padding: 10px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #aaa;
-            border-radius: 6px;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-        .action-btn:active {
-            background-color: #e0e0e0;
-        }
-        .action-btn.primary {
-            background-color: #d7ecff;
-            border-color: #7fb8e6;
-        }
-        .action-btn.danger-mini {
-            background-color: #ffe0e0;
-            border-color: #e08a8a;
-            padding: 4px 8px;
-            font-size: 0.85rem;
-            border-radius: 4px;
-        }
-        .action-btn.insert-mini {
-            background-color: #e0ffe0;
-            border-color: #8ac48a;
-            padding: 4px 8px;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            margin-right: 4px;
-        }
-        h1 {
-            margin-bottom: 5px;
-            font-size: 1.8rem;
-            word-break: break-word;
-        }
-        .licence {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 0 0 5px 0;
-        }
-        .contact-line {
-            margin: 4px 0;
-            word-break: break-word;
-        }
-        .email-link {
-            color: #0066cc;
-            text-decoration: underline;
-            word-break: break-all;
-        }
-        .dotted-line {
-            border: none;
-            border-top: 2px dotted #888;
-            margin: 15px 0;
-        }
-        .report-line {
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-decoration: underline;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .update-line {
-            font-size: 0.85rem;
-            font-style: italic;
-            text-decoration: none;
-            font-weight: normal;
-            margin-left: 10px;
-            white-space: nowrap;
-        }
-        .editable {
-            outline: none;
-            border-bottom: 1px dashed transparent;
-        }
-        .editable:hover, .editable:focus {
-            border-bottom: 1px dashed #999;
-            background-color: #fffbe6;
-        }
-        .boarg-line {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 5px 0;
-        }
-        .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 20px -5px 0 -5px;
-            padding: 0 5px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: 780px;
-            font-size: 0.8rem;
-        }
-        tr {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 8px 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            font-weight: bold;
-            background-color: #f2f2f2;
-        }
-        td.editable-cell {
-            cursor: text;
-        }
-        /* Narrow widths for the last 3 columns (Telex, FC, IM) */
-        th:nth-child(7), td:nth-child(7),
-        th:nth-child(8), td:nth-child(8),
-        th:nth-child(9), td:nth-child(9) {
-            width: 45px;
-            max-width: 45px;
-            text-align: center;
-            padding: 8px 4px;
-        }
-        th:nth-child(10), td:nth-child(10) {
-            width: 34px;
-            max-width: 34px;
-            text-align: center;
-            padding: 4px;
-        }
-        .cell-green {
-            background-color: #90EE90;
-        }
-        .cell-red {
-            background-color: #FFCCCC;
-        }
-        .status-cell {
-            cursor: pointer;
-        }
-        .arrival-input {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 0.8rem;
-            border: none;
-            background: transparent;
-            width: 100%;
-            padding: 2px;
-            cursor: pointer;
-        }
-        .arrival-input:hover, .arrival-input:focus {
-            outline: none;
-            background-color: #fffbe6;
-        }
-        .arrival-print-text {
-            display: none;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #333;
-            border-top: 1px solid #ccc;
-            padding-top: 12px;
-        }
-        .swatch {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin: 0 4px -2px 0;
-            border: 1px solid #888;
-        }
-        .swatch-green { background-color: #90EE90; }
-        .swatch-red { background-color: #FFCCCC; }
-        .glossary-text {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-        .hint {
-            font-size: 0.75rem;
-            color: #777;
-            font-style: italic;
-            margin: 8px 0 0 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير يومي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --border:#000;
+    --bg:#fff;
+    --text:#000;
+  }
+  *{ box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  html,body{
+    margin:0; padding:0; background:#fff; color:#000;
+    font-family:'Cairo','Tahoma',Arial,sans-serif;
+  }
+  .page{ max-width:1100px; margin:0 auto; padding:18px 22px 40px; }
 
-        /* Scan overlay */
-        .scan-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .scan-overlay.active {
-            display: flex;
-        }
-        .scan-card {
-            background: #fff;
-            border-radius: 10px;
-            padding: 22px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            font-family: 'Times New Roman', Times, serif;
-        }
-        .scan-card h3 {
-            margin-top: 0;
-        }
-        .scan-field {
-            margin-bottom: 12px;
-        }
-        .scan-field label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        .scan-field input {
-            width: 100%;
-            padding: 7px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            border: 1px solid #aaa;
-            border-radius: 4px;
-        }
-        .scan-progress {
-            font-size: 0.9rem;
-            color: #555;
-            margin: 10px 0;
-            white-space: pre-wrap;
-        }
-        .scan-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-            justify-content: flex-end;
-        }
-        .scan-raw {
-            margin-top: 14px;
-            font-size: 0.75rem;
-            color: #666;
-        }
-        .scan-raw textarea {
-            width: 100%;
-            height: 90px;
-            font-size: 0.7rem;
-            font-family: monospace;
-            margin-top: 6px;
-        }
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 3px solid #ddd;
-            border-top-color: #555;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 6px 0 14px 0;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+  /* ---------- Letterhead ---------- */
+  .letterhead{ text-align:center; border-bottom:3px solid #000; padding-bottom:10px; margin-bottom:14px; }
+  .letterhead .company-name{ font-size:26px; font-weight:700; }
+  .letterhead .license{ font-size:16px; margin-top:2px; }
+  .letterhead .contact, .letterhead .address, .letterhead .email{ font-size:14px; margin-top:2px; direction:ltr; unicode-bidi:embed; }
+  .letterhead .contact, .letterhead .address{ direction:rtl; }
 
-        @media print {
-            .button-bar, .no-print, .hint, .scan-overlay {
-                display: none !important;
-            }
-            .arrival-input {
-                display: none !important;
-            }
-            .arrival-print-text {
-                display: inline !important;
-            }
-            body {
-                margin: 0.3in;
-                padding: 0;
-            }
-            .table-wrapper {
-                overflow-x: visible;
-                margin: 0;
-                padding: 0;
-            }
-            table {
-                min-width: auto;
-                font-size: 0.7rem;
-            }
-            th, td {
-                padding: 4px 6px;
-            }
-            .editable {
-                border-bottom: none !important;
-                background-color: transparent !important;
-            }
-            .cell-green, .cell-red,
-            .swatch-green, .swatch-red,
-            th {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-        }
+  /* ---------- Meta row ---------- */
+  .meta-row{ display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between;
+    border:2px solid #000; padding:10px 14px; margin-bottom:14px; font-size:16px; font-weight:600; }
+  .meta-field{ display:flex; align-items:center; gap:8px; flex:1; min-width:220px; }
+  .meta-field input[type=text]{
+    flex:1; font-family:inherit; font-size:16px; font-weight:600; color:#000;
+    border:none; border-bottom:2px solid #000; background:transparent; padding:2px 4px;
+  }
+  .meta-field input[type=text]:focus{ outline:none; background:#f5f5f5; }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            .licence, .report-line, .boarg-line {
-                font-size: 1rem;
-            }
-            .update-line {
-                white-space: normal;
-                display: inline-block;
-                margin-left: 0;
-            }
-            .button-bar {
-                justify-content: center;
-            }
-            .action-btn {
-                font-size: 0.9rem;
-                padding: 8px 14px;
-            }
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+  /* ---------- Toolbar ---------- */
+  .toolbar{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .toolbar button{
+    font-family:inherit; font-size:14px; font-weight:600; color:#000; background:#fff;
+    border:2px solid #000; border-radius:6px; padding:8px 14px; cursor:pointer;
+  }
+  .toolbar button:hover{ background:#000; color:#fff; }
+  .toolbar button:active{ transform:scale(0.97); }
+
+  /* ---------- Table ---------- */
+  table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+  thead th{
+    border:2px solid #000; background:#000; color:#fff; padding:10px 4px;
+    font-size:15px; font-weight:700; text-align:center;
+  }
+  tbody td{ border:1.5px solid #000; padding:6px 4px; text-align:center; vertical-align:middle; font-size:15px; }
+  tbody tr:nth-child(even){ background:#fafafa; }
+
+  th.col-ctrl, td.col-ctrl{ width:34px; }
+  th.col-date, td.col-date{ width:110px; }
+  th.col-toggle, td.col-toggle{ width:80px; }
+
+  .cell-input{
+    width:100%; border:none; background:transparent; font-family:inherit;
+    font-size:15px; text-align:center; color:#000; padding:4px 2px;
+  }
+  .cell-input:focus{ outline:none; background:#f0f0f0; }
+
+  /* status toggle squares */
+  .toggle-btn{
+    width:30px; height:30px; border:2px solid #000; background:#fff; cursor:pointer; border-radius:3px;
+  }
+  .toggle-btn.on{ background:#000; }
+
+  /* delete row button */
+  .row-del{
+    width:26px; height:26px; border:1.5px solid #000; background:#fff; color:#000;
+    font-weight:700; border-radius:50%; cursor:pointer; line-height:1;
+  }
+  .row-del:hover{ background:#000; color:#fff; }
+
+  /* date column */
+  .date-wrap{ display:flex; align-items:center; justify-content:center; gap:6px; }
+  .date-display{ cursor:pointer; font-weight:700; }
+  .date-hidden{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+  .date-today-btn{
+    border:1.5px solid #000; background:#fff; border-radius:4px; font-size:11px;
+    padding:2px 5px; cursor:pointer;
+  }
+  .date-today-btn:hover{ background:#000; color:#fff; }
+
+  .footer-note{ margin-top:10px; font-size:13px; text-align:center; }
+
+  /* ---------- Print rules ---------- */
+  .no-print{ }
+  @media print{
+    @page{ size: A4 landscape; margin: 10mm; }
+    body{ font-size:17px; }
+    .no-print{ display:none !important; }
+    .page{ max-width:none; padding:0; }
+    thead th{ font-size:18px; }
+    tbody td{ font-size:18px; padding:10px 4px; }
+    .cell-input{ font-size:18px; }
+    tr{ page-break-inside:avoid; }
+    .meta-field input[type=text]{ font-size:18px; }
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="button-bar">
-        <button class="action-btn" id="scanBtn">📷 Scan Bill of Lading</button>
-        <input type="file" id="blFileInput" accept="image/*,application/pdf" style="display:none">
-        <button class="action-btn" id="nowBtn">🕒 Set Date/Time to Now</button>
-        <button class="action-btn" id="addRowBtn">➕ Add Row</button>
-        <button class="action-btn primary" id="exportBtn">💾 Export Updated Page</button>
-        <button class="action-btn" id="resetBtn">↺ Reset</button>
-        <button class="action-btn" id="printBtn">🖨️ Print</button>
-        <button class="action-btn" id="pdfBtn">📄 Save PDF</button>
+<div class="page" id="page">
+
+  <header class="letterhead">
+    <div class="company-name">الغـالي الحـاج أحمـد</div>
+    <div class="license">رخصة تخليص 2460</div>
+    <div class="contact">ت: 0912341022 - 0129925333</div>
+    <div class="address">عمارة موسى الطابق الأول شقة (31)</div>
+    <div class="email">algalyalhaj24@gmail.com</div>
+  </header>
+
+  <div class="meta-row">
+    <div class="meta-field">
+      <span>تقرير اليوم:</span>
+      <span id="reportDate"></span>
     </div>
-
-    <div id="pdfContent">
-        <h1>ALGALY ALHAJ AHMED</h1>
-        <div class="licence">Clearance Licence (2460)</div>
-        <div class="contact-line">Phones: 0129925333 - 0912341022</div>
-        <div class="contact-line">Port Sudan, Musa building, apartment (31)</div>
-        <div class="contact-line"><a href="mailto:algalyalhaj24@gmail.com" class="email-link">algalyalhaj24@gmail.com</a></div>
-        <hr class="dotted-line">
-        <div class="report-line">
-            Report Date:&nbsp;<span class="editable" id="reportDate" contenteditable="true">07-Sep-2026</span>
-            <span class="update-line">last update: <span class="editable" id="lastUpdate" contenteditable="true">12:41 a.m.</span></span>
-        </div>
-        <div class="boarg-line"><u>BOARG TRADING ENTERPRISES</u></div>
-
-        <div class="table-wrapper">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>BILL</th><th>QTY</th><th>CNTR</th><th>Agent</th><th>Invoice REF</th><th>Arrival</th><th>Telex</th><th>FC</th><th>IM</th><th class="no-print"></th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">TAXW60123500</td>
-                        <td class="editable-cell" contenteditable="true">520</td>
-                        <td class="editable-cell" contenteditable="true">1</td>
-                        <td class="editable-cell" contenteditable="true">PIL</td>
-                        <td class="editable-cell" contenteditable="true">3009213</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-09"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">TAXW60122300</td>
-                        <td class="editable-cell" contenteditable="true">592</td>
-                        <td class="editable-cell" contenteditable="true">1</td>
-                        <td class="editable-cell" contenteditable="true">PIL</td>
-                        <td class="editable-cell" contenteditable="true">3009231</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-09"><span class="arrival-print-text"></span></td>
-                        <td class="cell-green status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">TAXW60122200</td>
-                        <td class="editable-cell" contenteditable="true">1184</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">PIL</td>
-                        <td class="editable-cell" contenteditable="true">3009234</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-09"><span class="arrival-print-text"></span></td>
-                        <td class="cell-green status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3284235</td>
-                        <td class="editable-cell" contenteditable="true">944</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009244</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3284687</td>
-                        <td class="editable-cell" contenteditable="true">472</td>
-                        <td class="editable-cell" contenteditable="true">1</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009247</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3294529</td>
-                        <td class="editable-cell" contenteditable="true">848</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009277</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3316242</td>
-                        <td class="editable-cell" contenteditable="true">1179</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true"></td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">TAXW60154200</td>
-                        <td class="editable-cell" contenteditable="true">790</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">PIL</td>
-                        <td class="editable-cell" contenteditable="true"></td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-10-07"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3375737</td>
-                        <td class="editable-cell" contenteditable="true">395</td>
-                        <td class="editable-cell" contenteditable="true">1</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009440</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-30"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3316226</td>
-                        <td class="editable-cell" contenteditable="true">790</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009386</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3316222</td>
-                        <td class="editable-cell" contenteditable="true">1004</td>
-                        <td class="editable-cell" contenteditable="true">2</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009338</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                    <tr>
-                        <td class="editable-cell" contenteditable="true">QGD3315888</td>
-                        <td class="editable-cell" contenteditable="true">491</td>
-                        <td class="editable-cell" contenteditable="true">1</td>
-                        <td class="editable-cell" contenteditable="true">CMA</td>
-                        <td class="editable-cell" contenteditable="true">3009385</td>
-                        <td class="arrival-cell"><input type="date" class="arrival-input" value="2026-09-22"><span class="arrival-print-text"></span></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="cell-red status-cell"></td>
-                        <td class="no-print"><button class="action-btn insert-mini insert-row" title="Insert row below">➕</button><button class="action-btn danger-mini del-row">✕</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <p class="hint">Tip: click any text cell to edit it. Click a Telex/FC/IM cell to toggle green ⇄ red. Click the Arrival cell to pick a date — rows automatically re-sort so the soonest arrival is on top. Click ➕ on a row to insert a new row right below it. Use "Scan Bill of Lading" to auto-fill a new row. Your edits auto-save in this browser — use Reset to discard them.</p>
-
-        <div class="glossary-text">
-            <strong>BILL:</strong> Bill of Lading &nbsp;&nbsp;
-            <strong>QTY:</strong> Quantity &nbsp;&nbsp;
-            <strong>CNTR:</strong>Number of  containers &nbsp;&nbsp;
-            <strong>Agent:</strong> Shipping Agent &nbsp;&nbsp;
-            <strong>Invoice REF:</strong> Invoice Reference &nbsp;&nbsp;
-            <strong>Arrival:</strong> Arrival date &nbsp;&nbsp;
-            <strong>Telex:</strong> Telex release &nbsp;&nbsp;
-            <strong>FC:</strong> Final Conformity &nbsp;&nbsp;
-            <strong>IM:</strong> Import Form
-            <br>
-            <span class="swatch swatch-green"></span> = Received &nbsp;&nbsp;&nbsp;
-            <span class="swatch swatch-red"></span> = NOT received
-            <br>
-            <strong>* Estimated Arrival, subject to changes.</strong>
-        </div>
-
-        <div class="footer">
-            Powered by Algaly Alhaj for digital solutions
-        </div>
+    <div class="meta-field">
+      <span>لعناية السيد:</span>
+      <input type="text" id="misterName" placeholder="اكتب الاسم هنا">
     </div>
-</div>
+  </div>
 
-<div class="scan-overlay no-print" id="scanOverlay">
-    <div class="scan-card">
-        <div id="scanLoading">
-            <h3>Reading document…</h3>
-            <div class="spinner"></div>
-            <p class="scan-progress" id="scanProgressText">Starting…</p>
-        </div>
-        <div id="scanReview" style="display:none;">
-            <h3>Review extracted info</h3>
-            <div class="scan-field"><label>BILL</label><input id="scanBill" type="text"></div>
-            <div class="scan-field"><label>QTY</label><input id="scanQty" type="text"></div>
-            <div class="scan-field"><label>CNTR</label><input id="scanCntr" type="text"></div>
-            <div class="scan-field"><label>Agent</label><input id="scanAgent" type="text"></div>
-            <p class="scan-progress">Invoice REF and Arrival aren't on this document — add those yourself after.</p>
-            <details class="scan-raw">
-                <summary>Show raw scanned text (to double-check anything)</summary>
-                <textarea id="scanRawText" readonly></textarea>
-            </details>
-            <div class="scan-actions">
-                <button class="action-btn" id="scanCancelBtn">Cancel</button>
-                <button class="action-btn primary" id="scanAddBtn">➕ Add to Table</button>
-            </div>
-        </div>
-        <div id="scanErrorBox" style="display:none;">
-            <h3>Couldn't read that</h3>
-            <p class="scan-progress" id="scanErrorMsg"></p>
-            <div class="scan-actions">
-                <button class="action-btn" id="scanErrorCloseBtn">Close</button>
-            </div>
-        </div>
-    </div>
+  <div class="toolbar no-print">
+    <button onclick="addRow()">＋ إضافة صف</button>
+    <button onclick="setAutoDateTime()">🕒 تعيين التاريخ والوقت</button>
+    <button onclick="clearAll()">🗑 قائمة جديدة</button>
+    <button onclick="savePDF()">💾 حفظ PDF</button>
+    <button onclick="printReport()">🖨 طباعة</button>
+  </div>
+
+  <table id="reportTable">
+    <thead>
+      <tr>
+        <th class="no-print col-ctrl"></th>
+        <th>رقم البوليصة</th>
+        <th>الشركة</th>
+        <th>الكمية</th>
+        <th class="col-toggle">الفاتورة</th>
+        <th class="col-toggle">المطابقة</th>
+        <th class="col-toggle">رقم الفك IM</th>
+        <th class="col-date">تاريخ الوصول</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <div class="footer-note">* تاريخ الوصول المتوقع، قابل للتغيير — التاريخ بدون (*) يعني أنه حان أو مضى، وبعلامة (*) يعني أنه لم يحن بعد</div>
 </div>
 
 <script>
-    (function() {
-        function ready(fn) {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', fn);
-            } else {
-                fn();
-            }
-        }
+let rows = [];
+let counter = 0;
 
-        const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const STORAGE_KEY = 'algaly_boarg_report_v2';
+function uid(){ counter += 1; return 'r' + Date.now() + '_' + counter; }
 
-        function formatDate(d) {
-            const day = String(d.getDate()).padStart(2, '0');
-            return day + '-' + MONTHS[d.getMonth()] + '-' + d.getFullYear();
-        }
+function newRow(){
+  return { id: uid(), date:'', im:false, match:false, invoice:false, qty:'', company:'', policy:'' };
+}
 
-        function formatTime(d) {
-            let h = d.getHours();
-            const m = String(d.getMinutes()).padStart(2, '0');
-            const ampm = h >= 12 ? 'p.m.' : 'a.m.';
-            h = h % 12;
-            if (h === 0) h = 12;
-            return String(h).padStart(2, '0') + ':' + m + ' ' + ampm;
-        }
+function loadState(){
+  try{
+    const saved = localStorage.getItem('daily_report_state');
+    if(saved){
+      const parsed = JSON.parse(saved);
+      rows = parsed.rows || [];
+      document.getElementById('misterName').value = parsed.misterName || '';
+    }
+  }catch(e){ rows = []; }
+  if(rows.length === 0){
+    for(let i=0;i<5;i++) rows.push(newRow());
+  }
+}
 
-        // Converts an ISO date (yyyy-mm-dd) into the short "*DD-Mon" style
-        // used throughout this report (asterisk = estimated arrival).
-        function formatArrival(isoValue) {
-            if (!isoValue) return '';
-            const parts = isoValue.split('-');
-            const y = parseInt(parts[0], 10), mo = parseInt(parts[1], 10) - 1, d = parseInt(parts[2], 10);
-            const dt = new Date(y, mo, d);
-            return '*' + String(dt.getDate()).padStart(2, '0') + '-' + MONTHS[dt.getMonth()];
-        }
+function saveState(){
+  try{
+    localStorage.setItem('daily_report_state', JSON.stringify({
+      rows: rows,
+      misterName: document.getElementById('misterName').value
+    }));
+  }catch(e){}
+}
 
-        function syncArrivalPrintText(input) {
-            const span = input.nextElementSibling;
-            if (span && span.classList.contains('arrival-print-text')) {
-                span.textContent = formatArrival(input.value);
-            }
-        }
+function formatDate(dateStr){
+  if(!dateStr) return '—';
+  const parts = dateStr.split('-');
+  if(parts.length !== 3) return '—';
+  const y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
+  const dateObj = new Date(y, m-1, d);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const label = String(d).padStart(2,'0') + '/' + String(m).padStart(2,'0');
+  return dateObj.getTime() > today.getTime() ? ('*' + label) : label;
+}
 
-        // ---------- Auto-save to this browser (localStorage) ----------
+function render(){
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
 
-        function collectState(tableBody) {
-            const rows = Array.from(tableBody.querySelectorAll('tr')).map(function(row) {
-                const cells = row.querySelectorAll('.editable-cell');
-                const arrivalInput = row.querySelector('.arrival-input');
-                const statusCells = row.querySelectorAll('.status-cell');
-                function isGreen(td) { return !!(td && td.classList.contains('cell-green')); }
-                return {
-                    bill: cells[0] ? cells[0].textContent : '',
-                    qty: cells[1] ? cells[1].textContent : '',
-                    cntr: cells[2] ? cells[2].textContent : '',
-                    agent: cells[3] ? cells[3].textContent : '',
-                    invoiceRef: cells[4] ? cells[4].textContent : '',
-                    arrival: arrivalInput ? arrivalInput.value : '',
-                    telex: isGreen(statusCells[0]) ? 'green' : 'red',
-                    fc: isGreen(statusCells[1]) ? 'green' : 'red',
-                    im: isGreen(statusCells[2]) ? 'green' : 'red'
-                };
-            });
-            return {
-                reportDate: document.getElementById('reportDate').textContent,
-                lastUpdate: document.getElementById('lastUpdate').textContent,
-                rows: rows
-            };
-        }
+    tr.innerHTML = `
+      <td class="no-print col-ctrl"><button class="row-del" title="حذف الصف" onclick="deleteRow('${row.id}')">×</button></td>
+      <td><input class="cell-input" type="text" value="${escapeHtml(row.policy)}" oninput="updateField('${row.id}','policy',this.value)"></td>
+      <td><input class="cell-input" type="text" value="${escapeHtml(row.company)}" oninput="updateField('${row.id}','company',this.value)"></td>
+      <td><input class="cell-input" type="text" value="${escapeHtml(row.qty)}" oninput="updateField('${row.id}','qty',this.value)"></td>
+      <td class="col-toggle"><button class="toggle-btn ${row.invoice?'on':''}" onclick="toggleField('${row.id}','invoice')"></button></td>
+      <td class="col-toggle"><button class="toggle-btn ${row.match?'on':''}" onclick="toggleField('${row.id}','match')"></button></td>
+      <td class="col-toggle"><button class="toggle-btn ${row.im?'on':''}" onclick="toggleField('${row.id}','im')"></button></td>
+      <td class="col-date">
+        <div class="date-wrap">
+          <span class="date-display" onclick="openDatePicker('${row.id}')">${formatDate(row.date)}</span>
+          <button class="date-today-btn no-print" onclick="setRowToday('${row.id}')">اليوم</button>
+          <input class="date-hidden" type="date" id="date_${row.id}" value="${row.date}" onchange="updateField('${row.id}','date',this.value)">
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  saveState();
+}
 
-        function saveState(tableBody) {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState(tableBody)));
-            } catch (e) {
-                console.error('Could not auto-save to this browser:', e);
-            }
-        }
+function escapeHtml(str){
+  return (str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
 
-        // Returns true if saved data was found and restored.
-        function restoreState(tableBody, createRowElement, attachRowHandlers) {
-            let raw;
-            try {
-                raw = localStorage.getItem(STORAGE_KEY);
-            } catch (e) {
-                return false;
-            }
-            if (!raw) return false;
-            let state;
-            try {
-                state = JSON.parse(raw);
-            } catch (e) {
-                return false;
-            }
-            if (!state || !Array.isArray(state.rows)) return false;
+function findRow(id){ return rows.find(r => r.id === id); }
 
-            if (typeof state.reportDate === 'string') {
-                document.getElementById('reportDate').textContent = state.reportDate;
-            }
-            if (typeof state.lastUpdate === 'string') {
-                document.getElementById('lastUpdate').textContent = state.lastUpdate;
-            }
-            tableBody.innerHTML = '';
-            state.rows.forEach(function(r) {
-                const row = createRowElement(r);
-                tableBody.appendChild(row);
-                attachRowHandlers(row);
-            });
-            return true;
-        }
+function updateField(id, field, value){
+  const row = findRow(id);
+  if(!row) return;
+  row[field] = value;
+  if(field === 'date'){ render(); }
+  else { saveState(); }
+}
 
-        // Sorts every row by Arrival date, soonest first. Rows with no
-        // Arrival date yet are left at the bottom until one is set.
-        function sortRowsByArrival(tableBody) {
-            const rows = Array.from(tableBody.querySelectorAll('tr'));
-            rows.sort(function(a, b) {
-                const aInput = a.querySelector('.arrival-input');
-                const bInput = b.querySelector('.arrival-input');
-                const aVal = aInput ? aInput.value : '';
-                const bVal = bInput ? bInput.value : '';
-                if (!aVal && !bVal) return 0;
-                if (!aVal) return 1;
-                if (!bVal) return -1;
-                return aVal < bVal ? -1 : (aVal > bVal ? 1 : 0);
-            });
-            rows.forEach(function(row) { tableBody.appendChild(row); });
-        }
+function toggleField(id, field){
+  const row = findRow(id);
+  if(!row) return;
+  row[field] = !row[field];
+  render();
+}
 
-        function attachRowHandlers(row, tableBody) {
-            row.querySelectorAll('.status-cell').forEach(function(cell) {
-                cell.addEventListener('click', function() {
-                    if (cell.classList.contains('cell-green')) {
-                        cell.classList.remove('cell-green');
-                        cell.classList.add('cell-red');
-                    } else {
-                        cell.classList.remove('cell-red');
-                        cell.classList.add('cell-green');
-                    }
-                    saveState(tableBody);
-                });
-            });
-            const arrivalInput = row.querySelector('.arrival-input');
-            if (arrivalInput) {
-                syncArrivalPrintText(arrivalInput);
-                arrivalInput.addEventListener('change', function() {
-                    syncArrivalPrintText(arrivalInput);
-                    sortRowsByArrival(tableBody);
-                    saveState(tableBody);
-                });
-            }
-            const delBtn = row.querySelector('.del-row');
-            if (delBtn) {
-                delBtn.addEventListener('click', function() {
-                    if (confirm('Delete this row?')) {
-                        row.remove();
-                        saveState(tableBody);
-                    }
-                });
-            }
-            const insertBtn = row.querySelector('.insert-row');
-            if (insertBtn) {
-                insertBtn.addEventListener('click', function() {
-                    const newRow = createRowElement();
-                    row.parentNode.insertBefore(newRow, row.nextSibling);
-                    attachRowHandlers(newRow, tableBody);
-                    const firstCell = newRow.querySelector('.editable-cell');
-                    if (firstCell) firstCell.focus();
-                    saveState(tableBody);
-                });
-            }
-        }
+function openDatePicker(id){
+  const input = document.getElementById('date_' + id);
+  if(input.showPicker){ input.showPicker(); }
+  else { input.focus(); input.click(); }
+}
 
-        // Builds one <tr> for the table. `data` (optional) pre-fills every field
-        // (e.g. from a scanned document, or from a previously auto-saved state).
-        function createRowElement(data) {
-            data = data || {};
-            const row = document.createElement('tr');
+function setRowToday(id){
+  const row = findRow(id);
+  if(!row) return;
+  row.date = todayISO();
+  render();
+}
 
-            function makeEditableCell(text) {
-                const td = document.createElement('td');
-                td.className = 'editable-cell';
-                td.contentEditable = 'true';
-                td.textContent = text || '';
-                return td;
-            }
+function todayISO(){
+  const now = new Date();
+  return now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+}
 
-            row.appendChild(makeEditableCell(data.bill || 'New Bill'));
-            row.appendChild(makeEditableCell(data.qty || '0'));
-            row.appendChild(makeEditableCell(data.cntr || '1'));
-            row.appendChild(makeEditableCell(data.agent || 'CMA'));
-            row.appendChild(makeEditableCell(data.invoiceRef || ''));
+function addRow(){
+  rows.push(newRow());
+  render();
+}
 
-            const arrivalTd = document.createElement('td');
-            arrivalTd.className = 'arrival-cell';
-            const arrivalInput = document.createElement('input');
-            arrivalInput.type = 'date';
-            arrivalInput.className = 'arrival-input';
-            arrivalInput.value = data.arrival || '';
-            arrivalTd.appendChild(arrivalInput);
-            const arrivalSpan = document.createElement('span');
-            arrivalSpan.className = 'arrival-print-text';
-            arrivalSpan.textContent = formatArrival(data.arrival || '');
-            arrivalTd.appendChild(arrivalSpan);
-            row.appendChild(arrivalTd);
+function deleteRow(id){
+  rows = rows.filter(r => r.id !== id);
+  render();
+}
 
-            ['telex', 'fc', 'im'].forEach(function(key) {
-                const td = document.createElement('td');
-                const colorClass = (data[key] === 'green') ? 'cell-green' : 'cell-red';
-                td.className = colorClass + ' status-cell';
-                row.appendChild(td);
-            });
+function clearAll(){
+  if(!confirm('هل أنت متأكد من مسح كل البيانات وإنشاء قائمة جديدة؟')) return;
+  rows = [];
+  for(let i=0;i<5;i++) rows.push(newRow());
+  document.getElementById('misterName').value = '';
+  setAutoDateTime();
+  render();
+}
 
-            const actionsTd = document.createElement('td');
-            actionsTd.className = 'no-print';
-            const insertBtn = document.createElement('button');
-            insertBtn.className = 'action-btn insert-mini insert-row';
-            insertBtn.title = 'Insert row below';
-            insertBtn.textContent = '➕';
-            actionsTd.appendChild(insertBtn);
-            const delBtn = document.createElement('button');
-            delBtn.className = 'action-btn danger-mini del-row';
-            delBtn.textContent = '✕';
-            actionsTd.appendChild(delBtn);
-            row.appendChild(actionsTd);
+function setAutoDateTime(){
+  const now = new Date();
+  const d = String(now.getDate()).padStart(2,'0');
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const y = now.getFullYear();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('reportDate').textContent = `${d}/${m}/${y} - ${hh}:${mm}`;
+}
 
-            return row;
-        }
+function printReport(){
+  document.title = 'تقرير يومي';
+  window.print();
+}
 
-        // ---------- PDF / print rendering mode ----------
-        // Temporarily hides editing-only affordances and swaps each Arrival
-        // date-picker for its plain-text equivalent, so what gets measured
-        // and captured matches the final PDF/print output exactly.
-        function applyOutputMode() {
-            document.querySelectorAll('.hint').forEach(function(el) { el.style.display = 'none'; });
-            document.querySelectorAll('.no-print').forEach(function(el) { el.style.display = 'none'; });
-            document.querySelectorAll('.arrival-input').forEach(function(el) { el.style.display = 'none'; });
-            document.querySelectorAll('.arrival-print-text').forEach(function(el) { el.style.display = 'inline'; });
-        }
-        function removeOutputMode() {
-            document.querySelectorAll('.hint').forEach(function(el) { el.style.display = ''; });
-            document.querySelectorAll('.no-print').forEach(function(el) { el.style.display = ''; });
-            document.querySelectorAll('.arrival-input').forEach(function(el) { el.style.display = ''; });
-            document.querySelectorAll('.arrival-print-text').forEach(function(el) { el.style.display = 'none'; });
-        }
+function savePDF(){
+  let name = document.getElementById('misterName').value.trim();
+  if(!name){
+    name = prompt('أدخل اسم السيد ليُستخدم في اسم الملف:', '') || '';
+    document.getElementById('misterName').value = name;
+  }
+  const safeName = (name || 'تقرير').replace(/[\\/:*?"<>|]/g, '_');
+  const now = new Date();
+  const dateStr = String(now.getDate()).padStart(2,'0') + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + now.getFullYear();
+  document.title = safeName + '_' + dateStr;
+  saveState();
+  window.print();
+}
 
-        // ---------- Bill of Lading OCR scanning ----------
+document.getElementById('misterName').addEventListener('input', saveState);
 
-        function parseBillOfLading(rawText) {
-            const upper = rawText.toUpperCase();
-            const lines = upper.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
-
-            let bill = '';
-            const blLabelIdx = lines.findIndex(function(l) { return l.includes('BILL OF LADING NUMBER'); });
-            if (blLabelIdx !== -1) {
-                for (let i = blLabelIdx; i < Math.min(blLabelIdx + 4, lines.length); i++) {
-                    const m = lines[i].match(/\b[A-Z]{2,6}\d{6,9}[A-Z]?\b/);
-                    if (m) { bill = m[0]; break; }
-                }
-            }
-            if (!bill) {
-                const m = upper.match(/\b[A-Z]{2,6}\d{6,9}[A-Z]?\b/);
-                if (m) bill = m[0];
-            }
-
-            let cntr = '', qty = '';
-            const sayIdx = lines.findIndex(function(l) { return l.indexOf('SAY ') === 0 || l.indexOf('SAY') === 0; });
-            if (sayIdx > 1) {
-                const qtyMatch = lines[sayIdx - 1].match(/(\d[\d,]*)\s*PIECE/);
-                if (qtyMatch) qty = qtyMatch[1].replace(/,/g, '');
-                const cntrMatch = lines[sayIdx - 2].match(/^(\d+)\s*X\s*\d{2}\s*(?:HC|HQ|GP|FT|RF)?/);
-                if (cntrMatch) cntr = cntrMatch[1];
-            }
-            if (!qty) {
-                const pieceNums = Array.from(upper.matchAll(/(\d[\d,]*)\s*PIECE/g)).map(function(m) {
-                    return parseInt(m[1].replace(/,/g, ''), 10);
-                });
-                if (pieceNums.length) qty = String(Math.max.apply(null, pieceNums));
-            }
-            if (!cntr) {
-                const containerCodes = upper.match(/\b[A-Z]{4}\d{6,7}\b/g) || [];
-                if (containerCodes.length) cntr = String(containerCodes.length);
-            }
-
-            let agent = '';
-            const CARRIER_MAP = [
-                { keyword: 'CMA CGM', code: 'CMA' },
-                { keyword: 'PACIFIC INTERNATIONAL LINES', code: 'PIL' },
-                { keyword: ' PIL ', code: 'PIL' },
-                { keyword: 'MEDITERRANEAN SHIPPING', code: 'MSC' },
-                { keyword: ' MSC ', code: 'MSC' },
-                { keyword: 'MAERSK', code: 'MAERSK' },
-                { keyword: 'SHARAF', code: 'SHARAF' }
-            ];
-            for (let i = 0; i < CARRIER_MAP.length; i++) {
-                if (upper.indexOf(CARRIER_MAP[i].keyword) !== -1) { agent = CARRIER_MAP[i].code; break; }
-            }
-
-            return { bill: bill, qty: qty, cntr: cntr, agent: agent };
-        }
-
-        async function renderPdfFirstPageToCanvas(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            const page = await pdf.getPage(1);
-            const viewport = page.getViewport({ scale: 2.5 });
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-            return canvas;
-        }
-
-        async function extractText(file, onProgress) {
-            let source = file;
-            if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
-                onProgress('Rendering PDF page…');
-                source = await renderPdfFirstPageToCanvas(file);
-            }
-            const result = await Tesseract.recognize(source, 'eng', {
-                logger: function(m) {
-                    if (m.status && typeof m.progress === 'number') {
-                        onProgress('Reading document… ' + m.status + ' (' + Math.round(m.progress * 100) + '%)');
-                    }
-                }
-            });
-            return result.data.text;
-        }
-
-        ready(function() {
-            const printBtn = document.getElementById('printBtn');
-            const pdfBtn = document.getElementById('pdfBtn');
-            const nowBtn = document.getElementById('nowBtn');
-            const addRowBtn = document.getElementById('addRowBtn');
-            const exportBtn = document.getElementById('exportBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const tableBody = document.getElementById('tableBody');
-            const reportDateEl = document.getElementById('reportDate');
-            const lastUpdateEl = document.getElementById('lastUpdate');
-
-            // Restore any previously auto-saved edits from this browser;
-            // otherwise keep the data baked into the page.
-            const restored = restoreState(tableBody, createRowElement, function(row) {
-                attachRowHandlers(row, tableBody);
-            });
-            if (!restored) {
-                document.querySelectorAll('#tableBody tr').forEach(function(row) {
-                    attachRowHandlers(row, tableBody);
-                });
-            }
-            sortRowsByArrival(tableBody);
-
-            // Auto-save whenever a text cell, the report date, or the last-update
-            // field is edited (contenteditable fires 'input' as you type).
-            tableBody.addEventListener('input', function(e) {
-                if (e.target.classList && e.target.classList.contains('editable-cell')) {
-                    saveState(tableBody);
-                }
-            });
-            if (reportDateEl) reportDateEl.addEventListener('input', function() { saveState(tableBody); });
-            if (lastUpdateEl) lastUpdateEl.addEventListener('input', function() { saveState(tableBody); });
-
-            // Keep the native browser Print / "Save as PDF" dialog consistent
-            // with the Save PDF button: hide editing-only bits during printing.
-            window.addEventListener('beforeprint', applyOutputMode);
-            window.addEventListener('afterprint', removeOutputMode);
-
-            if (printBtn) {
-                printBtn.addEventListener('click', function() {
-                    window.print();
-                });
-            }
-
-            if (nowBtn) {
-                nowBtn.addEventListener('click', function() {
-                    const now = new Date();
-                    reportDateEl.textContent = formatDate(now);
-                    lastUpdateEl.textContent = formatTime(now);
-                    saveState(tableBody);
-                });
-            }
-
-            if (addRowBtn) {
-                addRowBtn.addEventListener('click', function() {
-                    const row = createRowElement();
-                    tableBody.appendChild(row);
-                    attachRowHandlers(row, tableBody);
-                    row.querySelector('.editable-cell').focus();
-                    saveState(tableBody);
-                });
-            }
-
-            if (resetBtn) {
-                resetBtn.addEventListener('click', function() {
-                    if (confirm('This clears your saved edits on this device and reloads the page\u2019s original data. Continue?')) {
-                        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-                        location.reload();
-                    }
-                });
-            }
-
-            if (exportBtn) {
-                exportBtn.addEventListener('click', function() {
-                    // Clone the whole document, strip the editing affordances,
-                    // and bake current values into plain attributes so the
-                    // exported file is a clean static page (same as manual edits).
-                    const clone = document.documentElement.cloneNode(true);
-
-                    clone.querySelectorAll('[contenteditable]').forEach(function(el) {
-                        el.removeAttribute('contenteditable');
-                    });
-                    clone.querySelectorAll('.status-cell').forEach(function(el) {
-                        el.classList.remove('status-cell');
-                    });
-                    const liveArrivalCells = document.querySelectorAll('.arrival-cell');
-                    clone.querySelectorAll('.arrival-cell').forEach(function(cell, i) {
-                        const liveInput = liveArrivalCells[i].querySelector('.arrival-input');
-                        cell.textContent = formatArrival(liveInput ? liveInput.value : '');
-                        cell.classList.remove('arrival-cell');
-                    });
-                    clone.querySelectorAll('.no-print').forEach(function(el) {
-                        el.remove();
-                    });
-                    const hint = clone.querySelector('.hint');
-                    if (hint) hint.remove();
-                    const scanOverlayClone = clone.querySelector('.scan-overlay');
-                    if (scanOverlayClone) scanOverlayClone.remove();
-
-                    const doctype = '<!DOCTYPE html>\n';
-                    const html = doctype + clone.outerHTML;
-
-                    const blob = new Blob([html], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'BOARG_Report.html';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                });
-            }
-
-            if (pdfBtn) {
-                pdfBtn.addEventListener('click', async function() {
-                    const originalText = pdfBtn.textContent;
-                    pdfBtn.textContent = '⏳ Generating PDF...';
-                    pdfBtn.disabled = true;
-
-                    try {
-                        if (typeof html2pdf === 'undefined') {
-                            alert('PDF library not loaded. Use Print → "Save as PDF" instead.');
-                            window.print();
-                            return;
-                        }
-
-                        document.querySelectorAll('.arrival-input').forEach(syncArrivalPrintText);
-                        applyOutputMode();
-                        // Let the browser reflow after the visibility changes above
-                        // so the measurements below reflect the final layout.
-                        await new Promise(function(resolve) { setTimeout(resolve, 30); });
-
-                        const element = document.getElementById('pdfContent');
-                        const pxPerInch = 96;
-                        const marginIn = 0.4;
-                        const widthIn = (element.scrollWidth / pxPerInch) + (marginIn * 2);
-                        const heightIn = (element.scrollHeight / pxPerInch) + (marginIn * 2);
-
-                        const opt = {
-                            margin: [marginIn, marginIn, marginIn, marginIn],
-                            filename: 'BOARG_Report.pdf',
-                            image: { type: 'jpeg', quality: 0.95 },
-                            html2canvas: {
-                                scale: 2.5,
-                                letterRendering: true,
-                                backgroundColor: '#ffffff',
-                                logging: false
-                            },
-                            jsPDF: { unit: 'in', format: [widthIn, heightIn] },
-                            // Extra safety net: if the page ever does need to split,
-                            // never cut a row in half — push the whole row over instead.
-                            pagebreak: { mode: ['css', 'legacy'], avoid: 'tr' }
-                        };
-
-                        await html2pdf().set(opt).from(element).save();
-                    } catch (err) {
-                        console.error('PDF error:', err);
-                        alert('PDF failed. Try Print button → "Save as PDF".');
-                    } finally {
-                        removeOutputMode();
-                        pdfBtn.textContent = originalText;
-                        pdfBtn.disabled = false;
-                    }
-                });
-            }
-
-            // ---------- Scan Bill of Lading wiring ----------
-            const scanBtn = document.getElementById('scanBtn');
-            const blFileInput = document.getElementById('blFileInput');
-            const scanOverlay = document.getElementById('scanOverlay');
-            const scanLoading = document.getElementById('scanLoading');
-            const scanReview = document.getElementById('scanReview');
-            const scanErrorBox = document.getElementById('scanErrorBox');
-            const scanProgressText = document.getElementById('scanProgressText');
-            const scanCancelBtn = document.getElementById('scanCancelBtn');
-            const scanAddBtn = document.getElementById('scanAddBtn');
-            const scanErrorCloseBtn = document.getElementById('scanErrorCloseBtn');
-
-            function openOverlayLoading() {
-                scanOverlay.classList.add('active');
-                scanLoading.style.display = 'block';
-                scanReview.style.display = 'none';
-                scanErrorBox.style.display = 'none';
-                scanProgressText.textContent = 'Starting…';
-            }
-            function closeOverlay() {
-                scanOverlay.classList.remove('active');
-            }
-            function showReviewForm(parsed, rawText) {
-                scanLoading.style.display = 'none';
-                scanReview.style.display = 'block';
-                document.getElementById('scanBill').value = parsed.bill;
-                document.getElementById('scanQty').value = parsed.qty;
-                document.getElementById('scanCntr').value = parsed.cntr;
-                document.getElementById('scanAgent').value = parsed.agent;
-                document.getElementById('scanRawText').value = rawText;
-            }
-            function showScanError(msg) {
-                scanLoading.style.display = 'none';
-                scanErrorBox.style.display = 'block';
-                document.getElementById('scanErrorMsg').textContent = msg;
-            }
-
-            if (scanBtn && blFileInput) {
-                scanBtn.addEventListener('click', function() {
-                    blFileInput.click();
-                });
-                blFileInput.addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    openOverlayLoading();
-                    try {
-                        const text = await extractText(file, function(msg) {
-                            scanProgressText.textContent = msg;
-                        });
-                        const parsed = parseBillOfLading(text);
-                        showReviewForm(parsed, text);
-                    } catch (err) {
-                        console.error('OCR error:', err);
-                        const reason = (err && err.message) ? err.message : String(err);
-                        const isLocalFile = window.location.protocol === 'file:';
-                        const hint = isLocalFile
-                            ? 'This page is open as a local file — Scan needs to be opened from a real web address (e.g. your GitHub Pages link) to load the OCR engine.'
-                            : 'Try a clearer, well-lit photo (or a PDF), or enter the row manually.';
-                        showScanError(hint + '\n\nDetails: ' + reason);
-                    }
-                    blFileInput.value = '';
-                });
-            }
-            if (scanCancelBtn) scanCancelBtn.addEventListener('click', closeOverlay);
-            if (scanErrorCloseBtn) scanErrorCloseBtn.addEventListener('click', closeOverlay);
-            if (scanAddBtn) {
-                scanAddBtn.addEventListener('click', function() {
-                    const data = {
-                        bill: document.getElementById('scanBill').value.trim(),
-                        qty: document.getElementById('scanQty').value.trim(),
-                        cntr: document.getElementById('scanCntr').value.trim(),
-                        agent: document.getElementById('scanAgent').value.trim()
-                    };
-                    const row = createRowElement(data);
-                    tableBody.appendChild(row);
-                    attachRowHandlers(row, tableBody);
-                    closeOverlay();
-                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    saveState(tableBody);
-                });
-            }
-        });
-    })();
+loadState();
+setAutoDateTime();
+render();
 </script>
 </body>
 </html>
