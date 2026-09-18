@@ -89,6 +89,14 @@
 
   .footer-note{ margin-top:10px; font-size:13px; text-align:center; }
 
+  /* legend */
+  .legend{ display:flex; justify-content:center; gap:28px; margin-top:14px; font-size:15px; font-weight:600; }
+  .legend-item{ display:flex; align-items:center; gap:8px; }
+  .legend-box{ width:22px; height:22px; border:2px solid #000; display:inline-block; background:#fff; border-radius:3px; }
+  .legend-box.on{ background:#000; }
+
+  .branding{ margin-top:18px; text-align:center; font-size:12px; color:#000; border-top:1px solid #000; padding-top:6px; }
+
   /* ---------- Print rules ---------- */
   .no-print{ }
   @media print{
@@ -141,16 +149,24 @@
         <th>رقم البوليصة</th>
         <th>الشركة</th>
         <th>الكمية</th>
-        <th class="col-toggle">الفاتورة</th>
+        <th>الفاتورة</th>
         <th class="col-toggle">المطابقة</th>
-        <th class="col-toggle">رقم الفك IM</th>
+        <th class="col-toggle">IM</th>
+        <th class="col-toggle">رقم الفك</th>
         <th class="col-date">تاريخ الوصول</th>
       </tr>
     </thead>
     <tbody id="tableBody"></tbody>
   </table>
 
+  <div class="legend">
+    <span class="legend-item"><span class="legend-box on"></span> تم الإستلام</span>
+    <span class="legend-item"><span class="legend-box"></span> لم يتم الإستلام</span>
+  </div>
+
   <div class="footer-note">* تاريخ الوصول المتوقع، قابل للتغيير — التاريخ بدون (*) يعني أنه حان أو مضى، وبعلامة (*) يعني أنه لم يحن بعد</div>
+
+  <div class="branding">Powered by AlgalyAlhaj for digital solutions</div>
 </div>
 
 <script>
@@ -160,7 +176,7 @@ let counter = 0;
 function uid(){ counter += 1; return 'r' + Date.now() + '_' + counter; }
 
 function newRow(){
-  return { id: uid(), date:'', im:false, match:false, invoice:false, qty:'', company:'', policy:'' };
+  return { id: uid(), date:'', fak:false, im:false, match:false, invoice:'', qty:'', company:'', policy:'' };
 }
 
 function loadState(){
@@ -208,9 +224,10 @@ function render(){
       <td><input class="cell-input" type="text" value="${escapeHtml(row.policy)}" oninput="updateField('${row.id}','policy',this.value)"></td>
       <td><input class="cell-input" type="text" value="${escapeHtml(row.company)}" oninput="updateField('${row.id}','company',this.value)"></td>
       <td><input class="cell-input" type="text" value="${escapeHtml(row.qty)}" oninput="updateField('${row.id}','qty',this.value)"></td>
-      <td class="col-toggle"><button class="toggle-btn ${row.invoice?'on':''}" onclick="toggleField('${row.id}','invoice')"></button></td>
+      <td><input class="cell-input" type="text" value="${escapeHtml(row.invoice)}" oninput="updateField('${row.id}','invoice',this.value)"></td>
       <td class="col-toggle"><button class="toggle-btn ${row.match?'on':''}" onclick="toggleField('${row.id}','match')"></button></td>
       <td class="col-toggle"><button class="toggle-btn ${row.im?'on':''}" onclick="toggleField('${row.id}','im')"></button></td>
+      <td class="col-toggle"><button class="toggle-btn ${row.fak?'on':''}" onclick="toggleField('${row.id}','fak')"></button></td>
       <td class="col-date">
         <div class="date-wrap">
           <span class="date-display" onclick="openDatePicker('${row.id}')">${formatDate(row.date)}</span>
